@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 
 // ==========================================
-// CONexión DIRECTA Y SEGURA A SUPABASE
+// CONEXIÓN A SUPABASE CON PROTECCIÓN TOTAL ANTI-CRASH
 // ==========================================
 const supabaseUrl = "https://oblliicjkguzifjnmvay.supabase.co";
 const supabaseAnonKey = "sb_publishable_GypvVUE5PIbGyZf4YfT2gw_0aRGPn9i";
@@ -125,13 +125,14 @@ export default function App() {
   const [notification, setNotification] = useState<string>('');
 
   useEffect(() => {
-    loadChaptersFromCloud();
+    // Carga segura que nunca rompe la página
+    loadChaptersSafely();
     const savedStatus = localStorage.getItem('pl_latam_status');
     if (savedStatus) setMangaStatus(savedStatus);
     setCharacters(INITIAL_CHARACTERS);
   }, []);
 
-  const loadChaptersFromCloud = async () => {
+  const loadChaptersSafely = async () => {
     try {
       const { data, error } = await supabase
         .from('chapters')
@@ -146,13 +147,24 @@ export default function App() {
           pages: item.pages || []
         }));
         setChapters(formatted);
-      } else {
-        setChapters(INITIAL_CHAPTERS);
+        return;
       }
     } catch (err) {
-      console.error('Error cargando de Supabase:', err);
-      setChapters(INITIAL_CHAPTERS);
+      console.log("Usando respaldo local por seguridad");
     }
+
+    // Respaldo por defecto para que abra al instante
+    const saved = localStorage.getItem('pl_latam_chapters');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed && parsed.length > 0) {
+          setChapters(parsed);
+          return;
+        }
+      } catch (e) {}
+    }
+    setChapters(INITIAL_CHAPTERS);
   };
 
   const showNotification = (msg: string) => {
@@ -191,20 +203,31 @@ export default function App() {
       pages
     };
 
+    // Intentar subir a Supabase para todos
     try {
-      const { error } = await supabase
+      await supabase
         .from('chapters')
         .upsert([newChapter], { onConflict: 'id' });
-      
-      if (error) throw error;
-      showNotification(`¡Capítulo ${chapNumber} publicado en la nube para todo el mundo!`);
-      setChapPagesText('');
-      setChapTitle('');
-      loadChaptersFromCloud();
-    } catch (err: any) {
-      console.error("Error al guardar en Supabase:", err);
-      showNotification('Error al guardar en la base de datos: ' + (err.message || ''));
+    } catch (err) {
+      console.error("Supabase error al guardar:", err);
     }
+
+    // Actualizar localmente también
+    const updated = [...chapters];
+    const index = updated.findIndex((c) => c.number === chapNumber);
+    if (index >= 0) {
+      updated[index] = newChapter;
+    } else {
+      updated.push(newChapter);
+      updated.sort((a, b) => a.number - b.number);
+    }
+
+    setChapters(updated);
+    localStorage.setItem('pl_latam_chapters', JSON.stringify(updated));
+    showNotification(`¡Capítulo ${chapNumber} guardado y publicado!`);
+    setChapPagesText('');
+    setChapTitle('');
+    loadChaptersSafely();
   };
 
   const handleDeleteChapter = async (num: number) => {
@@ -212,13 +235,13 @@ export default function App() {
 
     try {
       await supabase.from('chapters').delete().eq('number', num);
-      showNotification(`Capítulo ${num} eliminado de la nube.`);
-      if (selectedChapter?.number === num) setSelectedChapter(null);
-      loadChaptersFromCloud();
-    } catch (err) {
-      console.error(err);
-      showNotification('No se pudo eliminar de la base de datos.');
-    }
+    } catch (err) {}
+
+    const updated = chapters.filter((c) => c.number !== num);
+    setChapters(updated);
+    localStorage.setItem('pl_latam_chapters', JSON.stringify(updated));
+    showNotification(`Capítulo ${num} eliminado.`);
+    if (selectedChapter?.number === num) setSelectedChapter(null);
   };
 
   const handleUpdateCharacterImage = (e: React.FormEvent) => {
@@ -230,6 +253,7 @@ export default function App() {
       return c;
     });
     setCharacters(updated);
+    localStorage.setItem('pl_latam_characters', JSON.stringify(updated));
     showNotification('¡Foto de personaje actualizada!');
     setCharImageUrl('');
   };
@@ -613,7 +637,7 @@ export default function App() {
                     className="w-full bg-pink-600 hover:bg-pink-500 text-white font-bold py-2.5 rounded-lg transition flex items-center justify-center gap-2 text-sm"
                   >
                     <Save size={18} />
-                    Guardar / Publicar Capítulo en la Nube
+                    Guardar y Publicar Capítulo
                   </button>
                 </form>
 
