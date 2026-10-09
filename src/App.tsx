@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createClient } from '@supabase/supabase-js';
 import { 
   Settings, 
   Image as ImageIcon, 
@@ -15,6 +16,11 @@ import {
   User,
   Users
 } from 'lucide-react';
+
+// Configuración de Supabase utilizando tus variables de entorno
+const SUPABASE_URL = process.env.REACT_APP_SUPABASE_URL || '';
+const SUPABASE_ANON_KEY = process.env.REACT_APP_SUPABASE_ANON_KEY || '';
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 interface Chapter {
   id: string;
@@ -53,7 +59,7 @@ const INITIAL_CHARACTERS: Character[] = [
   { id: 'char-11', name: 'Gaho Zen', group: 'Akanyatsura', role: 'Profesor', occupation: 'Profesor de educación física', classroom: 'Curso general de secundaria, 2º año, clase C', club: 'Asesor del club de judo', description: 'Es un gran fanfarrón con los bíceps, y tiene los músculos más voluminosos de la escuela.', image: 'https://i.imgur.com/SDVJOq3.jpeg' },
   { id: 'char-12', name: 'Masaki Hokusai', group: 'Akanyatsura', role: 'Estudiante', academicLevel: '3er año, curso general, Clase D', club: 'Club de tiro con arco', council: 'Departamento de animales', description: 'Es un gigante gentil que prefiere pasar tiempo en el patio con los gatos en lugar de asistir a clases.', image: 'https://i.imgur.com/rJJIj9C.jpeg' },
   { id: 'char-13', name: 'Maruyama Reo', group: 'Akanyatsura', role: 'Estudiante', academicLevel: '1er año, curso general, Clase E', club: 'Club de música', council: 'N/A', description: 'Un pequeño y astuto demonio que se ganó el apodo de "El Senpai Asesino".', image: 'https://i.imgur.com/MMda3Im.jpeg' },
-  { id: 'char-14', name: 'Ito Satsuki', group: 'Akanyatsura', role: 'Estudiante', academicLevel: '1er año, curso general, Clase A', club: 'Club de baloncesto', council: 'N/A', description: 'Un delincuente de élite que ha logrado la impresionante hazaña de reprobar absolutamente todas las materias.', image: 'https://i.imgur.com/S1sMDHB.jpeg' },
+  { id: 'char-14', name: 'Ito Satsuki', group: 'Akanyatsura', role: 'Estudiante', academicLevel: '1er año, curso general, Clase A', club: 'Club de baloncesto', council: 'N/A', description: 'Un delincuente de élite que has logrado la impresionante hazaña de reprobar absolutamente todas las materias.', image: 'https://i.imgur.com/S1sMDHB.jpeg' },
   { id: 'char-15', name: 'Yeon Dongha', group: 'Amprule', role: 'Estudiante', academicLevel: '3er año, curso avanzado', club: 'Club de arte', council: 'Presidente del consejo estudiantil de secundaria', description: 'Este pequeño emperador gobierna con puño de hierro sobre la clase de secundaria.', image: 'https://i.imgur.com/ysTNgqU.jpeg' },
   { id: 'char-16', name: 'Baek Chungsung', group: 'Amprule', role: 'Profesor', occupation: 'Profesor de arte', classroom: 'Curso avanzado de secundaria, segundo año', club: 'Asesor del club de arte', description: 'Este es sin dudas, un profesor masoquista que espera ansiosamente ser castigado por su amo.', image: 'https://i.imgur.com/FRQxsWT.jpeg' },
   { id: 'char-17', name: 'Yamato Shogo', group: 'VISTY', role: 'Estudiante', academicLevel: '2do año, curso general, Clase D', club: 'Presidente del club de astronomía', council: 'N/A', description: 'Un joven serio pero un poco tonto, realmente ama las estrellas y las gomitas.', image: 'https://i.imgur.com/wIHHDdY.jpeg' },
@@ -71,8 +77,7 @@ const INITIAL_CHARACTERS: Character[] = [
   { id: 'char-29', name: 'Shingu Haruomi', group: 'BURAIKAN', role: 'Personal', occupation: 'Director', description: 'El carismático director que dirige la escuela al lado del presidente.', image: 'https://i.imgur.com/iY8x4Zh.jpeg' }
 ];
 
-// Generación estricta de los 18 capítulos exactos
-const BASE_18_CHAPTERS: Chapter[] = Array.from({ length: 18 }, (_, i) => ({
+const DEFAULT_18_CHAPTERS: Chapter[] = Array.from({ length: 18 }, (_, i) => ({
   id: `cap-${i + 1}`,
   number: i + 1,
   title: `Capítulo ${i + 1}`,
@@ -81,7 +86,7 @@ const BASE_18_CHAPTERS: Chapter[] = Array.from({ length: 18 }, (_, i) => ({
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<'manga' | 'characters' | 'admin'>('manga');
-  const [chapters, setChapters] = useState<Chapter[]>(BASE_18_CHAPTERS);
+  const [chapters, setChapters] = useState<Chapter[]>(DEFAULT_18_CHAPTERS);
   const [selectedChapter, setSelectedChapter] = useState<Chapter | null>(null);
   const [selectedGroup, setSelectedGroup] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -103,33 +108,41 @@ export default function App() {
 
   const [notification, setNotification] = useState<string>('');
 
+  // Cargar datos en tiempo real desde Supabase para TODOS los visitantes
   useEffect(() => {
-    // Forzamos la carga o creación limpia de exactamente 18 capítulos, respetando los que ya tengan imágenes guardadas
-    const savedChapters = localStorage.getItem('pl_latam_chapters');
-    let mergedChapters = [...BASE_18_CHAPTERS];
-
-    if (savedChapters) {
+    async function fetchDataFromSupabase() {
       try {
-        const parsed = JSON.parse(savedChapters);
-        if (Array.isArray(parsed)) {
-          mergedChapters = BASE_18_CHAPTERS.map(base => {
-            const found = parsed.find((c: Chapter) => c.number === base.number);
-            return found ? found : base;
+        // Cargar Capítulos
+        const { data: chapData, error: chapError } = await supabase
+          .from('chapters')
+          .select('*');
+
+        if (!chapError && chapData && chapData.length > 0) {
+          const merged = DEFAULT_18_CHAPTERS.map(def => {
+            const found = chapData.find((c: any) => c.number === def.number);
+            return found ? { id: found.id || def.id, number: found.number, title: found.title || def.title, pages: found.pages || [] } : def;
           });
+          setChapters(merged);
+        } else {
+          setChapters(DEFAULT_18_CHAPTERS);
         }
-      } catch (e) {
-        console.error(e);
+
+        // Cargar Estado del Manga
+        const { data: statusData } = await supabase
+          .from('settings')
+          .select('*')
+          .eq('key', 'manga_status')
+          .single();
+
+        if (statusData && statusData.value) {
+          setMangaStatus(statusData.value);
+        }
+      } catch (err) {
+        console.error("Error conectando a Supabase:", err);
       }
     }
 
-    setChapters(mergedChapters);
-    localStorage.setItem('pl_latam_chapters', JSON.stringify(mergedChapters));
-
-    const savedStatus = localStorage.getItem('pl_latam_status');
-    if (savedStatus) setMangaStatus(savedStatus);
-
-    setCharacters(INITIAL_CHARACTERS);
-    localStorage.setItem('pl_latam_characters', JSON.stringify(INITIAL_CHARACTERS));
+    fetchDataFromSupabase();
   }, []);
 
   const showNotification = (msg: string) => {
@@ -148,47 +161,66 @@ export default function App() {
     }
   };
 
-  const handleChangeStatus = (status: string) => {
+  const handleChangeStatus = async (status: string) => {
     setMangaStatus(status);
-    localStorage.setItem('pl_latam_status', status);
     showNotification(`Estado actualizado a: "${status}"`);
+    try {
+      await supabase
+        .from('settings')
+        .upsert({ key: 'manga_status', value: status }, { onConflict: 'key' });
+    } catch (e) {
+      console.error(e);
+    }
   };
 
-  const handleSaveChapter = (e: React.FormEvent) => {
+  const handleSaveChapter = async (e: React.FormEvent) => {
     e.preventDefault();
     const pages = chapPagesText
       .split('\n')
       .map((p) => p.trim())
       .filter((p) => p.length > 0);
 
-    const updated = chapters.map(c => {
-      if (c.number === chapNumber) {
-        return {
-          ...c,
-          title: chapTitle || `Capítulo ${chapNumber}`,
-          pages
-        };
-      }
-      return c;
-    });
+    const updatedChapter = {
+      id: `cap-${chapNumber}`,
+      number: chapNumber,
+      title: chapTitle || `Capítulo ${chapNumber}`,
+      pages
+    };
 
-    setChapters(updated);
-    localStorage.setItem('pl_latam_chapters', JSON.stringify(updated));
-    showNotification(`¡Capítulo ${chapNumber} guardado con éxito!`);
+    // Guardar en Supabase para que se actualice globalmente
+    try {
+      const { error } = await supabase
+        .from('chapters')
+        .upsert(updatedChapter, { onConflict: 'number' });
+
+      if (error) {
+        alert("Error al guardar en Supabase: " + error.message);
+        return;
+      }
+    } catch (err) {
+      console.error(err);
+    }
+
+    const updatedList = chapters.map(c => c.number === chapNumber ? updatedChapter : c);
+    setChapters(updatedList);
+    showNotification(`¡Capítulo ${chapNumber} guardado en la nube con éxito!`);
     setChapPagesText('');
     setChapTitle('');
   };
 
-  const handleDeleteChapter = (num: number) => {
-    const updated = chapters.map((c) => {
-      if (c.number === num) {
-        return { ...c, pages: [] };
-      }
-      return c;
-    });
-    setChapters(updated);
-    localStorage.setItem('pl_latam_chapters', JSON.stringify(updated));
-    showNotification(`Páginas del Capítulo ${num} eliminadas.`);
+  const handleDeleteChapter = async (num: number) => {
+    const updatedList = chapters.map(c => c.number === num ? { ...c, pages: [] } : c);
+    setChapters(updatedList);
+    
+    try {
+      await supabase
+        .from('chapters')
+        .upsert({ id: `cap-${num}`, number: num, title: `Capítulo ${num}`, pages: [] }, { onConflict: 'number' });
+    } catch (e) {
+      console.error(e);
+    }
+
+    showNotification(`Páginas del Capítulo ${num} vaciadas.`);
     if (selectedChapter?.number === num) setSelectedChapter(null);
   };
 
@@ -201,8 +233,7 @@ export default function App() {
       return c;
     });
     setCharacters(updated);
-    localStorage.setItem('pl_latam_characters', JSON.stringify(updated));
-    showNotification('¡Foto de personaje actualizada con éxito!');
+    showNotification('¡Foto de personaje actualizada localmente!');
     setCharImageUrl('');
   };
 
@@ -586,7 +617,7 @@ export default function App() {
                     className="w-full bg-pink-600 hover:bg-pink-500 text-white font-bold py-2.5 rounded-lg transition flex items-center justify-center gap-2 text-sm"
                   >
                     <Save size={18} />
-                    Guardar / Publicar Capítulo
+                    Guardar Capítulo en la Nube
                   </button>
                 </form>
 
