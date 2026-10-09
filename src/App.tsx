@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-// Datos cargados directamente
+// Lista completa de personajes oficiales con sus imágenes públicas visibles para todo el mundo
 const charactersData = [
   {
     id: "char-1",
@@ -9,7 +9,6 @@ const charactersData = [
     role: "Estudiante",
     academicLevel: "2do año, curso general, Clase C",
     club: "Presidente del club de hip-hop",
-    council: "N/A",
     description: "Un presidente del club de hip-hop que aspira a que el club llegue a la cima una vez que se gradúen.",
     image: "https://i.imgur.com/c0rngvV.jpeg"
   },
@@ -20,7 +19,6 @@ const charactersData = [
     role: "Estudiante",
     academicLevel: "2do año, curso avanzado",
     club: "Club de tenis",
-    council: "Presidente del consejo estudiantil de la escuela secundaria",
     description: "El noble sonriente que dirige la escuela como si fuera su propio castillo.",
     image: "https://i.imgur.com/GqXpiP8.jpeg"
   },
@@ -31,7 +29,6 @@ const charactersData = [
     role: "Estudiante",
     academicLevel: "2do año, curso general, Clase B",
     club: "Presidenta del club de sastrería",
-    council: "Comité ejecutivo del festival cultural",
     description: "Un influencer abrumadoramente popular.",
     image: "https://i.imgur.com/cPsipv2.jpeg"
   },
@@ -42,8 +39,7 @@ const charactersData = [
     role: "Estudiante",
     academicLevel: "2do año, curso general, Clase C",
     club: "No está en ningún club",
-    council: "N/A",
-    description: "Una persona que no tiene miedo de arriesgarse, solo se presenta los días que son necesarios para no reprobar.",
+    description: "Una persona que no tiene miedo de arriesgarse, solo se presenta los días necesarios para no reprobar.",
     image: "https://i.imgur.com/xh6HHYD.jpeg"
   },
   {
@@ -53,7 +49,6 @@ const charactersData = [
     role: "Estudiante",
     academicLevel: "2do año, curso general, Clase B",
     club: "No está en ningún club",
-    council: "N/A",
     description: "Es el holgazán de clase S más poderoso en la historia de la escuela.",
     image: "https://i.imgur.com/n8a52Et.jpeg"
   },
@@ -62,7 +57,7 @@ const charactersData = [
     name: "Saimon Naoakira",
     group: "The Cat's Whiskers",
     role: "Profesor de japonés",
-    academicLevel: "Curso avanzado de secundaria, primeros años",
+    academicLevel: "Curso avanzado, primeros años",
     club: "Asesor del club de teatro",
     description: "Un guardián del tiempo cuya hermosa voz atrajo a miles de estudiantes a una tierra de los sueños.",
     image: "https://i.imgur.com/93kdqP2.jpeg"
@@ -81,6 +76,8 @@ const charactersData = [
     name: "Natsume Ryu",
     group: "The Cat's Whiskers",
     role: "Estudiante",
+    academicLevel: "?",
+    club: "?",
     description: "Un excelente ejemplo de una persona que se supone que ya se ha graduado, pero aún así aparece en el campus todos los días.",
     image: "https://i.imgur.com/601gh5F.jpeg"
   },
@@ -99,7 +96,7 @@ const charactersData = [
     name: "Suiseki Iori",
     group: "Akanyatsura",
     role: "Profesor de matemáticas",
-    academicLevel: "Curso general de secundaria, 3er año, clase F",
+    academicLevel: "Curso general, 3er año, clase F",
     club: "Asesor del club de baloncesto",
     description: "Es un completo demonio de cálculo mental que inculca en las cabezas de sus alumnos un espíritu temerario.",
     image: "https://i.imgur.com/TmlS4Q5.jpeg"
@@ -109,7 +106,7 @@ const charactersData = [
     name: "Gaho Zen",
     group: "Akanyatsura",
     role: "Profesor de educación física",
-    academicLevel: "Curso general de secundaria, 2º año, clase C",
+    academicLevel: "Curso general, 2º año, clase C",
     club: "Asesor del club de judo",
     description: "Es un gran fanfarrón con los bíceps, y tiene los músculos más voluminosos de la escuela.",
     image: "https://i.imgur.com/SDVJOq3.jpeg"
@@ -123,15 +120,28 @@ const charactersData = [
     club: "Club de tiro con arco",
     description: "Es un gigante gentil que prefiere pasar tiempo en el patio con los gatos en lugar de asistir a clases.",
     image: "https://i.imgur.com/rJJIj9C.jpeg"
+  },
+  {
+    id: "char-13",
+    name: "Maruyama Reo",
+    group: "Akanyatsura",
+    role: "Estudiante",
+    academicLevel: "1er año, curso general",
+    club: "Club de hip-hop",
+    description: "Miembro de Akanyatsura.",
+    image: "https://i.imgur.com/rJJIj9C.jpeg"
   }
 ];
 
+// Capítulos de Manga con sus páginas públicas en Imgur
 const chaptersData = [
   {
     id: "cap-1",
     number: 1,
-    title: "Capítulo 1",
-    pages: []
+    title: "Capítulo 1: Stage Battle",
+    pages: [
+      "https://i.imgur.com/c0rngvV.jpeg", // Puedes cambiar o agregar más links de imágenes aquí
+    ]
   }
 ];
 
@@ -188,7 +198,7 @@ export default function App() {
                 ))}
               </div>
             ) : (
-              <p className="text-slate-400 py-10 text-center">Próximamente se cargarán las imágenes de este capítulo.</p>
+              <p className="text-slate-400 py-10 text-center">Este capítulo aún no tiene páginas cargadas.</p>
             )}
           </div>
         ) : activeTab === 'home' ? (
@@ -238,7 +248,7 @@ export default function App() {
             <h2 className="text-2xl font-bold border-b border-slate-800 pb-2">Personajes ({charactersData.length})</h2>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {charactersData.map((char) => (
-                <div key={char.id} className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden flex flex-col justify-between">
+                <div key={char.id} className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden flex flex-col justify-between shadow-lg">
                   {char.image && (
                     <div className="w-full h-72 bg-slate-800 overflow-hidden">
                       <img 
@@ -258,7 +268,7 @@ export default function App() {
                       </div>
                       
                       <div className="text-xs text-slate-400 space-y-1 mb-3">
-                        {char.role && <p><span className="text-slate-500">Rol/Puesto:</span> {char.role}</p>}
+                        {char.role && <p><span className="text-slate-500">Rol:</span> {char.role}</p>}
                         {char.academicLevel && <p><span className="text-slate-500">Nivel:</span> {char.academicLevel}</p>}
                         {char.club && <p><span className="text-slate-500">Club:</span> {char.club}</p>}
                       </div>
