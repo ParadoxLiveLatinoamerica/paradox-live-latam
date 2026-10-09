@@ -169,7 +169,7 @@ export default function App() {
     showNotification(`Estado actualizado a: "${status}"`);
   };
 
-  // GUARDAR CAPÍTULO DIRECTAMENTE EN SUPABASE (GLOBAL PARA TODOS)
+  // GUARDAR CAPÍTULO DIRECTAMENTE EN SUPABASE (GLOBAL PARA TODOS CON UPSERT)
   const handleSaveChapter = async (e: React.FormEvent) => {
     e.preventDefault();
     const pages = chapPagesText
