@@ -12,6 +12,12 @@ interface Character {
   group: string;
   role: string;
   description: string;
+  image?: string;
+  academicLevel?: string;
+  club?: string;
+  council?: string;
+  occupation?: string;
+  classroom?: string;
 }
 
 interface Chapter {
@@ -153,20 +159,40 @@ export default function App() {
             )}
           </div>
         ) : (
-          /* Galería de Personajes */
+          /* Galería de Personajes con Imagen y Ficha Completa */
           <div className="space-y-4">
             <h2 className="text-2xl font-bold border-b border-slate-800 pb-2">Personajes</h2>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {characters.map((char) => (
-                <div key={char.id} className="bg-slate-900 border border-slate-800 p-5 rounded-xl space-y-2">
-                  <div className="flex justify-between items-start">
-                    <h3 className="font-bold text-lg text-purple-300">{char.name}</h3>
-                    <span className="bg-purple-950 text-purple-300 text-xs px-2.5 py-1 rounded-full border border-purple-800 font-semibold">
-                      {char.group}
-                    </span>
+                <div key={char.id} className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden flex flex-col justify-between">
+                  {char.image && (
+                    <div className="w-full h-64 bg-slate-800 overflow-hidden">
+                      <img 
+                        src={char.image} 
+                        alt={char.name} 
+                        className="w-full h-full object-cover object-top hover:scale-105 transition duration-300"
+                      />
+                    </div>
+                  )}
+                  <div className="p-5 space-y-3 flex-1 flex flex-col justify-between">
+                    <div>
+                      <div className="flex justify-between items-start mb-2">
+                        <h3 className="font-bold text-xl text-purple-300">{char.name}</h3>
+                        <span className="bg-purple-950 text-purple-300 text-xs px-2.5 py-1 rounded-full border border-purple-800 font-semibold">
+                          {char.group}
+                        </span>
+                      </div>
+                      
+                      <div className="text-xs text-slate-400 space-y-1 mb-3">
+                        {char.role && <p><span className="text-slate-500">Rol/Puesto:</span> {char.role}</p>}
+                        {char.academicLevel && <p><span className="text-slate-500">Nivel Acd.:</span> {char.academicLevel}</p>}
+                        {char.occupation && <p><span className="text-slate-500">Ocupación:</span> {char.occupation}</p>}
+                        {char.club && <p><span className="text-slate-500">Club:</span> {char.club}</p>}
+                      </div>
+
+                      <p className="text-sm text-slate-300">{char.description || 'Sin descripción disponible.'}</p>
+                    </div>
                   </div>
-                  <p className="text-xs text-slate-400 font-medium">MC: {char.role}</p>
-                  <p className="text-sm text-slate-300 pt-2">{char.description || 'Sin descripción disponible.'}</p>
                 </div>
               ))}
             </div>
