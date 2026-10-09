@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
 
-// Conexión a Supabase compatible con Vite y Vercel
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || process.env.REACT_APP_SUPABASE_URL || '';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || process.env.REACT_APP_SUPABASE_ANON_KEY || '';
+// Lectura directa de variables de entorno para Vite
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-export const supabase = createClient(
-  supabaseUrl || 'https://placeholder.supabase.co', 
-  supabaseAnonKey || 'placeholder'
-);
+// Solo inicializamos si la URL es válida para evitar que la app colapse
+export const supabase = (supabaseUrl && supabaseUrl.startsWith('http'))
+  ? createClient(supabaseUrl, supabaseAnonKey)
+  : null;
 
 interface Chapter {
   id: string;
@@ -35,6 +35,10 @@ export default function App() {
   }, []);
 
   const fetchData = async () => {
+    if (!supabase) {
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     try {
       const { data: chaptersData } = await supabase.from('chapters').select('*').order('number', { ascending: true });
@@ -52,7 +56,11 @@ export default function App() {
   return (
     <div className="min-h-screen bg-slate-900 text-white p-6">
       <h1 className="text-3xl font-bold text-center mb-6">Paradox Live LATAM</h1>
-      {loading ? (
+      {!supabaseUrl ? (
+        <p className="text-center text-red-400">
+          ⚠️ Falta configurar VITE_SUPABASE_URL en Vercel.
+        </p>
+      ) : loading ? (
         <p className="text-center text-gray-400">Cargando contenido...</p>
       ) : (
         <div className="max-w-4xl mx-auto space-y-6">
