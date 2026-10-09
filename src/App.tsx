@@ -89,27 +89,13 @@ const INITIAL_CHARACTERS: Character[] = [
   { id: 'char-29', name: 'Shingu Haruomi', group: 'BURAIKAN', role: 'Personal', occupation: 'Director', description: 'El carismático director que dirige la escuela al lado del presidente.', image: 'https://i.imgur.com/iY8x4Zh.jpeg' }
 ];
 
-// 18 CAPÍTULOS INICIALES (AQUÍ PUEDES AGREGAR LOS LINKS DE TUS PÁGINAS DIRECTAMENTE)
-const INITIAL_CHAPTERS: Chapter[] = [
-  { id: 'cap-1', number: 1, title: 'Capítulo 1', pages: [] },
-  { id: 'cap-2', number: 2, title: 'Capítulo 2', pages: [] },
-  { id: 'cap-3', number: 3, title: 'Capítulo 3', pages: [] },
-  { id: 'cap-4', number: 4, title: 'Capítulo 4', pages: [] },
-  { id: 'cap-5', number: 5, title: 'Capítulo 5', pages: [] },
-  { id: 'cap-6', number: 6, title: 'Capítulo 6', pages: [] },
-  { id: 'cap-7', number: 7, title: 'Capítulo 7', pages: [] },
-  { id: 'cap-8', number: 8, title: 'Capítulo 8', pages: [] },
-  { id: 'cap-9', number: 9, title: 'Capítulo 9', pages: [] },
-  { id: 'cap-10', number: 10, title: 'Capítulo 10', pages: [] },
-  { id: 'cap-11', number: 11, title: 'Capítulo 11', pages: [] },
-  { id: 'cap-12', number: 12, title: 'Capítulo 12', pages: [] },
-  { id: 'cap-13', number: 13, title: 'Capítulo 13', pages: [] },
-  { id: 'cap-14', number: 14, title: 'Capítulo 14', pages: [] },
-  { id: 'cap-15', number: 15, title: 'Capítulo 15', pages: [] },
-  { id: 'cap-16', number: 16, title: 'Capítulo 16', pages: [] },
-  { id: 'cap-17', number: 17, title: 'Capítulo 17', pages: [] },
-  { id: 'cap-18', number: 18, title: 'Capítulo 18', pages: [] }
-];
+// Ampliado exactamente a los 18 capítulos requeridos
+const INITIAL_CHAPTERS: Chapter[] = Array.from({ length: 18 }, (_, i) => ({
+  id: `cap-${i + 1}`,
+  number: i + 1,
+  title: `Capítulo ${i + 1}`,
+  pages: []
+}));
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<'manga' | 'characters' | 'admin'>('manga');
@@ -136,23 +122,32 @@ export default function App() {
   const [notification, setNotification] = useState<string>('');
 
   useEffect(() => {
-    // Forzamos que si hay datos viejos en el navegador, se sincronicen con los 18 capítulos oficiales
     const savedChapters = localStorage.getItem('pl_latam_chapters');
     if (savedChapters) {
       try { 
         const parsed = JSON.parse(savedChapters);
         if (parsed && parsed.length > 0) {
-          // Fusionamos para asegurar que estén los 18 capítulos listos
-          setChapters(parsed);
+          // Aseguramos que si existían menos guardados, se completen hasta los 18 capítulos
+          const fullChapters = Array.from({ length: 18 }, (_, i) => {
+            const found = parsed.find((c: Chapter) => c.number === i + 1);
+            return found || {
+              id: `cap-${i + 1}`,
+              number: i + 1,
+              title: `Capítulo ${i + 1}`,
+              pages: []
+            };
+          });
+          setChapters(fullChapters);
         } else {
           setChapters(INITIAL_CHAPTERS);
         }
       } catch (e) { 
+        console.error(e); 
         setChapters(INITIAL_CHAPTERS);
       }
     } else {
-      setChapters(INITIAL_CHAPTERS);
       localStorage.setItem('pl_latam_chapters', JSON.stringify(INITIAL_CHAPTERS));
+      setChapters(INITIAL_CHAPTERS);
     }
 
     const savedStatus = localStorage.getItem('pl_latam_status');
@@ -210,16 +205,21 @@ export default function App() {
 
     setChapters(updated);
     localStorage.setItem('pl_latam_chapters', JSON.stringify(updated));
-    showNotification(`¡Capítulo ${chapNumber} guardado correctamente!`);
+    showNotification(`¡Capítulo ${chapNumber} guardado!`);
     setChapPagesText('');
     setChapTitle('');
   };
 
   const handleDeleteChapter = (num: number) => {
-    const updated = chapters.map(c => c.number === num ? { ...c, pages: [] } : c);
+    const updated = chapters.map((c) => {
+      if (c.number === num) {
+        return { ...c, pages: [] }; // En lugar de borrar el capítulo y alterar los 18, vaciamos sus páginas
+      }
+      return c;
+    });
     setChapters(updated);
     localStorage.setItem('pl_latam_chapters', JSON.stringify(updated));
-    showNotification(`Páginas del Capítulo ${num} eliminadas.`);
+    showNotification(`Contenido del Capítulo ${num} eliminado.`);
     if (selectedChapter?.number === num) setSelectedChapter(null);
   };
 
@@ -305,7 +305,7 @@ export default function App() {
 
                 <h2 className="text-lg font-bold mb-3 flex items-center gap-2">
                   <BookOpen size={20} className="text-pink-500" />
-                  Lista de Capítulos (1 al 18)
+                  Lista de Capítulos (18 Capítulos)
                 </h2>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
@@ -601,7 +601,7 @@ export default function App() {
 
                   <div>
                     <label className="block text-xs font-bold text-slate-400 mb-1">
-                      Enlaces Directos de Imgur (Uno por línea)
+                      Enlaces Directos de Imgur o Base64 (Uno por línea)
                     </label>
                     <textarea
                       rows={5}
@@ -627,11 +627,11 @@ export default function App() {
                 <div className="space-y-2 max-h-48 overflow-y-auto">
                   {chapters.map((c) => (
                     <div key={c.id} className="flex items-center justify-between p-2 rounded bg-slate-950 border border-slate-800 text-xs">
-                      <span>Capítulo {c.number} - ({c.pages ? c.pages.length : 0} páginas)</span>
+                      <span>Capítulo {c.number} - ({c.pages.length} páginas)</span>
                       <button
                         onClick={() => handleDeleteChapter(c.number)}
                         className="text-red-400 hover:text-red-300 p-1"
-                        title="Vaciar capítulo"
+                        title="Vaciar páginas del capítulo"
                       >
                         <Trash2 size={16} />
                       </button>
