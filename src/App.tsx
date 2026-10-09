@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
 
-// Lectura directa de variables de entorno para Vite
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+// Conexión directa a Supabase con tus credenciales
+const SUPABASE_URL = "https://oblliicjkguzifjnmvay.supabase.co"; 
+const SUPABASE_ANON_KEY = "sb_publishable_GypvVUE5PIbGyZf4YfT2gw_0aRGPn9i";
 
-// Solo inicializamos si la URL es válida para evitar que la app colapse
-export const supabase = (supabaseUrl && supabaseUrl.startsWith('http'))
-  ? createClient(supabaseUrl, supabaseAnonKey)
-  : null;
+export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 interface Chapter {
   id: string;
@@ -35,10 +32,6 @@ export default function App() {
   }, []);
 
   const fetchData = async () => {
-    if (!supabase) {
-      setLoading(false);
-      return;
-    }
     setLoading(true);
     try {
       const { data: chaptersData } = await supabase.from('chapters').select('*').order('number', { ascending: true });
@@ -56,11 +49,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-slate-900 text-white p-6">
       <h1 className="text-3xl font-bold text-center mb-6">Paradox Live LATAM</h1>
-      {!supabaseUrl ? (
-        <p className="text-center text-red-400">
-          ⚠️ Falta configurar VITE_SUPABASE_URL en Vercel.
-        </p>
-      ) : loading ? (
+      {loading ? (
         <p className="text-center text-gray-400">Cargando contenido...</p>
       ) : (
         <div className="max-w-4xl mx-auto space-y-6">
