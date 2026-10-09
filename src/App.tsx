@@ -11,7 +11,8 @@ import {
   Search,
   Lock,
   Eye,
-  EyeOff
+  EyeOff,
+  Radio
 } from 'lucide-react';
 
 interface Chapter {
@@ -84,46 +85,15 @@ const INITIAL_CHARACTERS: Character[] = [
   { name: 'Shingu Haruomi', group: 'BURAIKAN', role: 'Personal', occupation: 'Director', description: 'El carismático director que dirige la escuela al lado del presidente.' }
 ];
 
-// Función helper para comprimir imágenes antes de guardarlas
-const compressImageFile = (file: File): Promise<string> => {
-  return new Promise((resolve) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = (event) => {
-      const img = new Image();
-      img.src = event.target?.result as string;
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        const MAX_WIDTH = 800; // Ancho máximo suficiente para pantalla móvil
-        let width = img.width;
-        let height = img.height;
-
-        if (width > MAX_WIDTH) {
-          height = Math.round((height * MAX_WIDTH) / width);
-          width = MAX_WIDTH;
-        }
-
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        if (ctx) {
-          ctx.drawImage(img, 0, 0, width, height);
-          // Comprimir al 60% de calidad JPEG para ahorrar memoria
-          resolve(canvas.toDataURL('image/jpeg', 0.6));
-        } else {
-          resolve(event.target?.result as string);
-        }
-      };
-    };
-  });
-};
-
 export default function App() {
   const [activeTab, setActiveTab] = useState<'manga' | 'characters' | 'admin'>('manga');
   const [chapters, setChapters] = useState<Chapter[]>([]);
   const [selectedChapter, setSelectedChapter] = useState<Chapter | null>(null);
   const [selectedGroup, setSelectedGroup] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState<string>('');
+
+  // Estado del Manga: En emisión vs Finalizado
+  const [mangaStatus, setMangaStatus] = useState<string>('En emisión');
 
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState<boolean>(false);
   const [inputPassword, setInputPassword] = useState<string>('');
@@ -134,16 +104,15 @@ export default function App() {
   const [chapTitle, setChapTitle] = useState<string>('');
   const [chapPagesText, setChapPagesText] = useState<string>('');
   const [notification, setNotification] = useState<string>('');
-  const [isProcessing, setIsProcessing] = useState<boolean>(false);
 
   useEffect(() => {
+    // Cargar capítulos guardados
     const savedChapters = localStorage.getItem('pl_latam_chapters');
     if (savedChapters) {
       try {
-        const parsed = JSON.parse(savedChapters);
-        setChapters(parsed);
+        setChapters(JSON.parse(savedChapters));
       } catch (e) {
-        console.error('Error loading chapters', e);
+        console.error('Error', e);
       }
     } else {
       const initial: Chapter[] = Array.from({ length: 17 }, (_, i) => ({
@@ -155,11 +124,17 @@ export default function App() {
       setChapters(initial);
       localStorage.setItem('pl_latam_chapters', JSON.stringify(initial));
     }
+
+    // Cargar estado del manga
+    const savedStatus = localStorage.getItem('pl_latam_status');
+    if (savedStatus) {
+      setMangaStatus(savedStatus);
+    }
   }, []);
 
   const showNotification = (msg: string) => {
     setNotification(msg);
-    setTimeout(() => setNotification(''), 3500);
+    setTimeout(() => setNotification(''), 3000);
   };
 
   const handleAdminAuth = (e: React.FormEvent) => {
@@ -169,30 +144,14 @@ export default function App() {
       setPasswordError('');
       setInputPassword('');
     } else {
-      setPasswordError('Contraseña incorrecta. Solo el administrador puede entrar.');
+      setPasswordError('Contraseña incorrecta.');
     }
   };
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files || files.length === 0) return;
-
-    setIsProcessing(true);
-    showNotification('Comprimiendo fotos para ahorrar espacio...');
-
-    const fileList = Array.from(files);
-    const promises = fileList.map((file) => compressImageFile(file));
-
-    try {
-      const compressedUrls = await Promise.all(promises);
-      const formattedUrls = compressedUrls.join('\n');
-      setChapPagesText((prev) => (prev ? `${prev}\n${formattedUrls}` : formattedUrls));
-      showNotification(`¡${files.length} imagen(es) optimizada(s) y procesada(s)!`);
-    } catch (err) {
-      showNotification('Error al optimizar algunas imágenes.');
-    } finally {
-      setIsProcessing(false);
-    }
+  const handleChangeStatus = (status: string) => {
+    setMangaStatus(status);
+    localStorage.setItem('pl_latam_status', status);
+    showNotification(`Estado del manga actualizado a: "${status}"`);
   };
 
   const handleSaveChapter = (e: React.FormEvent) => {
@@ -220,14 +179,10 @@ export default function App() {
     }
 
     setChapters(updated);
-    try {
-      localStorage.setItem('pl_latam_chapters', JSON.stringify(updated));
-      showNotification(`¡Capítulo ${chapNumber} guardado con éxito!`);
-      setChapPagesText('');
-      setChapTitle('');
-    } catch (err) {
-      showNotification('La memoria del navegador está llena. Borra algún capítulo antiguo antes de continuar.');
-    }
+    localStorage.setItem('pl_latam_chapters', JSON.stringify(updated));
+    showNotification(`¡Capítulo ${chapNumber} guardado!`);
+    setChapPagesText('');
+    setChapTitle('');
   };
 
   const handleDeleteChapter = (num: number) => {
@@ -292,11 +247,18 @@ export default function App() {
           <div>
             {!selectedChapter ? (
               <div>
-                <div className="mb-6 p-4 rounded-xl bg-slate-900 border border-slate-800">
-                  <h1 className="text-2xl font-bold text-pink-400 mb-1">Paralove School</h1>
-                  <p className="text-slate-400 text-sm">
-                    Traducción al español del manga Paralove School e información detallada sobre sus personajes y estudiantes.
-                  </p>
+                <div className="mb-6 p-4 rounded-xl bg-slate-900 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <h1 className="text-2xl font-bold text-pink-400">Paralove School</h1>
+                      <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold ${mangaStatus === 'En emisión' ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' : 'bg-slate-800 text-slate-300 border border-slate-700'}`}>
+                        {mangaStatus}
+                      </span>
+                    </div>
+                    <p className="text-slate-400 text-sm">
+                      Traducción al español del manga Paralove School e información detallada sobre sus personajes y estudiantes.
+                    </p>
+                  </div>
                 </div>
 
                 <h2 className="text-lg font-bold mb-3 flex items-center gap-2">
@@ -315,282 +277,4 @@ export default function App() {
                         <span className="font-bold text-white group-hover:text-pink-400 transition">
                           Capítulo {chap.number}
                         </span>
-                        <p className="text-xs text-slate-500 mt-0.5">
-                          {chap.pages.length > 0 ? `${chap.pages.length} páginas` : 'Próximamente'}
-                        </p>
-                      </div>
-                      <ChevronRight size={18} className="text-slate-600 group-hover:text-pink-400 transition" />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ) : (
-              <div>
-                <div className="flex items-center justify-between mb-4 bg-slate-900 p-3 rounded-xl border border-slate-800">
-                  <button
-                    onClick={() => setSelectedChapter(null)}
-                    className="flex items-center gap-1 text-sm font-semibold text-slate-300 hover:text-pink-400 transition"
-                  >
-                    <BookOpen size={16} />
-                    Lista de Capítulos
-                  </button>
-
-                  <span className="font-bold text-pink-400">Capítulo {selectedChapter.number}</span>
-
-                  <div className="flex items-center gap-1">
-                    {selectedChapter.number > 1 && (
-                      <button
-                        onClick={() => {
-                          const prev = chapters.find((c) => c.number === selectedChapter.number - 1);
-                          if (prev) setSelectedChapter(prev);
-                        }}
-                        className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300"
-                        title="Capítulo anterior"
-                      >
-                        <ChevronLeft size={18} />
-                      </button>
-                    )}
-                    {selectedChapter.number < chapters.length && (
-                      <button
-                        onClick={() => {
-                          const next = chapters.find((c) => c.number === selectedChapter.number + 1);
-                          if (next) setSelectedChapter(next);
-                        }}
-                        className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300"
-                        title="Capítulo siguiente"
-                      >
-                        <ChevronRight size={18} />
-                      </button>
-                    )}
-                  </div>
-                </div>
-
-                <div className="flex flex-col items-center gap-2 max-w-2xl mx-auto">
-                  {selectedChapter.pages && selectedChapter.pages.length > 0 ? (
-                    selectedChapter.pages.map((imgUrl, idx) => (
-                      <img
-                        key={idx}
-                        src={imgUrl}
-                        alt={`Página ${idx + 1}`}
-                        className="w-full rounded-lg shadow-lg border border-slate-800"
-                      />
-                    ))
-                  ) : (
-                    <div className="text-center py-16 text-slate-500">
-                      <ImageIcon size={48} className="mx-auto mb-2 opacity-40" />
-                      <p>Este capítulo aún no tiene páginas publicadas.</p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {activeTab === 'characters' && (
-          <div>
-            <div className="mb-6 flex flex-col md:flex-row gap-4 items-center justify-between">
-              <div className="relative w-full md:w-64">
-                <Search size={18} className="absolute left-3 top-2.5 text-slate-500" />
-                <input
-                  type="text"
-                  placeholder="Buscar estudiante..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-slate-900 border border-slate-800 rounded-lg pl-9 pr-4 py-2 text-sm text-slate-200 focus:outline-none focus:border-pink-500"
-                />
-              </div>
-
-              <div className="flex flex-wrap gap-1.5 w-full md:w-auto">
-                {groups.map((grp) => (
-                  <button
-                    key={grp}
-                    onClick={() => setSelectedGroup(grp)}
-                    className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition ${selectedGroup === grp ? 'bg-pink-600 text-white' : 'bg-slate-900 border border-slate-800 text-slate-400 hover:text-white'}`}
-                  >
-                    {grp}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {filteredCharacters.map((char, index) => (
-                <div key={index} className="p-4 rounded-xl bg-slate-900 border border-slate-800 flex flex-col justify-between">
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <h3 className="text-lg font-bold text-white">{char.name}</h3>
-                      <div className="flex items-center gap-1.5">
-                        <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-pink-950 text-pink-300 border border-pink-800">
-                          {char.group}
-                        </span>
-                        <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-300">
-                          {char.role}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="space-y-1 mb-3 text-xs text-slate-400">
-                      {char.academicLevel && <p><strong className="text-slate-300">Nivel académico:</strong> {char.academicLevel}</p>}
-                      {char.occupation && <p><strong className="text-slate-300">Ocupación:</strong> {char.occupation}</p>}
-                      {char.classroom && <p><strong className="text-slate-300">Aula:</strong> {char.classroom}</p>}
-                      {char.club && <p><strong className="text-slate-300">Club:</strong> {char.club}</p>}
-                      {char.council && <p><strong className="text-slate-300">Consejo estudiantil:</strong> {char.council}</p>}
-                    </div>
-
-                    <p className="text-sm text-slate-300 italic">{char.description}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'admin' && (
-          <div className="max-w-md mx-auto bg-slate-900 border border-slate-800 rounded-xl p-6">
-            {!isAdminAuthenticated ? (
-              <form onSubmit={handleAdminAuth} className="space-y-4">
-                <div className="text-center mb-4">
-                  <Lock size={36} className="mx-auto text-pink-500 mb-2" />
-                  <h2 className="text-lg font-bold text-white">Acceso Restringido</h2>
-                  <p className="text-xs text-slate-400">Ingresa la clave de administrador para subir o editar capítulos.</p>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-slate-400 mb-1">Contraseña</label>
-                  <div className="relative">
-                    <input
-                      type={showPassword ? 'text' : 'password'}
-                      value={inputPassword}
-                      onChange={(e) => setInputPassword(e.target.value)}
-                      placeholder="Introduce la contraseña"
-                      className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-pink-500 pr-10"
-                      required
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-3 text-slate-500 hover:text-slate-300"
-                    >
-                      {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                    </button>
-                  </div>
-                  {passwordError && <p className="text-xs text-red-400 mt-1">{passwordError}</p>}
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full bg-pink-600 hover:bg-pink-500 text-white font-bold py-2.5 rounded-lg transition text-sm"
-                >
-                  Entrar al Panel
-                </button>
-              </form>
-            ) : (
-              <div>
-                <div className="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
-                  <h2 className="text-lg font-bold flex items-center gap-2 text-pink-400">
-                    <Settings size={20} />
-                    Panel de Administración
-                  </h2>
-                  <button
-                    onClick={() => setIsAdminAuthenticated(false)}
-                    className="text-xs bg-slate-800 hover:bg-slate-700 px-2.5 py-1 rounded text-slate-300"
-                  >
-                    Cerrar Sesión
-                  </button>
-                </div>
-
-                <form onSubmit={handleSaveChapter} className="space-y-4">
-                  <div>
-                    <label className="block text-xs font-bold text-slate-400 mb-1">Número de Capítulo</label>
-                    <input
-                      type="number"
-                      min="1"
-                      value={chapNumber}
-                      onChange={(e) => setChapNumber(Number(e.target.value))}
-                      className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-pink-500"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-slate-400 mb-1">Título del Capítulo (Opcional)</label>
-                    <input
-                      type="text"
-                      placeholder="Ej: El comienzo"
-                      value={chapTitle}
-                      onChange={(e) => setChapTitle(e.target.value)}
-                      className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-pink-500"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-slate-400 mb-1">Subir Fotos desde la Galería</label>
-                    <label className={`flex flex-col items-center justify-center p-4 border-2 border-dashed ${isProcessing ? 'border-pink-500 bg-pink-950/20' : 'border-slate-700 hover:border-pink-500'} rounded-xl cursor-pointer bg-slate-950 transition`}>
-                      <Upload size={24} className="text-slate-400 mb-1" />
-                      <span className="text-xs font-semibold text-slate-300">
-                        {isProcessing ? 'Comprimiendo imágenes...' : 'Seleccionar fotos de la Galería'}
-                      </span>
-                      <input
-                        type="file"
-                        multiple
-                        accept="image/*"
-                        disabled={isProcessing}
-                        onChange={handleFileUpload}
-                        className="hidden"
-                      />
-                    </label>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-slate-400 mb-1">
-                      Páginas procesadas (Optimizado)
-                    </label>
-                    <textarea
-                      rows={4}
-                      value={chapPagesText}
-                      onChange={(e) => setChapPagesText(e.target.value)}
-                      placeholder="Las imágenes elegidas aparecerán aquí comprimidas"
-                      className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-slate-300 focus:outline-none focus:border-pink-500 font-mono"
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    disabled={isProcessing}
-                    className="w-full bg-pink-600 hover:bg-pink-500 text-white font-bold py-2.5 rounded-lg transition flex items-center justify-center gap-2 text-sm disabled:opacity-50"
-                  >
-                    <Save size={18} />
-                    Guardar / Publicar Capítulo
-                  </button>
-                </form>
-
-                <hr className="my-6 border-slate-800" />
-
-                <h3 className="text-sm font-bold text-slate-300 mb-3">Gestión de Capítulos</h3>
-                <div className="space-y-2 max-h-48 overflow-y-auto">
-                  {chapters.map((c) => (
-                    <div key={c.id} className="flex items-center justify-between p-2 rounded bg-slate-950 border border-slate-800 text-xs">
-                      <span>Capítulo {c.number} - ({c.pages.length} páginas)</span>
-                      <button
-                        onClick={() => handleDeleteChapter(c.number)}
-                        className="text-red-400 hover:text-red-300 p-1"
-                        title="Eliminar capítulo"
-                      >
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-      </main>
-
-      <footer className="bg-slate-900 border-t border-slate-800 py-4 text-center text-xs text-slate-500">
-        <p>PARADOX LIVE LATINOAMERICA &copy; Proyecto Fan-made sin fines de lucro.</p>
-      </footer>
-    </div>
-  );
-}
+                        <p className="text-xs text-slate-500
