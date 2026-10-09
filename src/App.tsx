@@ -18,11 +18,11 @@ import {
 } from 'lucide-react';
 
 // ==========================================
-// CONFIGURACIÓN CON VITE (Tus variables actuales)
+// CONexión DIRECTA Y SEGURA A SUPABASE
 // ==========================================
-const supabaseUrl = (import.meta as any).env?.VITE_SUPABASE_URL || '';
-const supabaseAnonKey = (import.meta as any).env?.VITE_SUPABASE_ANON_KEY || '';
-const supabase = (supabaseUrl && supabaseAnonKey) ? createClient(supabaseUrl, supabaseAnonKey) : null;
+const supabaseUrl = "https://oblliicjkguzifjnmvay.supabase.co";
+const supabaseAnonKey = "sb_publishable_GypvVUE5PIbGyZf4YfT2gw_0aRGPn9i";
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 interface Chapter {
   id: string;
@@ -125,45 +125,32 @@ export default function App() {
   const [notification, setNotification] = useState<string>('');
 
   useEffect(() => {
-    loadChapters();
+    loadChaptersFromCloud();
     const savedStatus = localStorage.getItem('pl_latam_status');
     if (savedStatus) setMangaStatus(savedStatus);
     setCharacters(INITIAL_CHARACTERS);
   }, []);
 
-  const loadChapters = async () => {
-    if (supabase) {
-      try {
-        const { data, error } = await supabase
-          .from('chapters')
-          .select('*')
-          .order('number', { ascending: true });
+  const loadChaptersFromCloud = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('chapters')
+        .select('*')
+        .order('number', { ascending: true });
 
-        if (!error && data && data.length > 0) {
-          const formatted: Chapter[] = data.map((item: any) => ({
-            id: item.id || `cap-${item.number}`,
-            number: item.number,
-            title: item.title || `Capítulo ${item.number}`,
-            pages: item.pages || []
-          }));
-          setChapters(formatted);
-          return;
-        }
-      } catch (err) {
-        console.error('Error conectando a Supabase:', err);
-      }
-    }
-
-    // Respaldo local
-    const savedChapters = localStorage.getItem('pl_latam_chapters');
-    if (savedChapters) {
-      try { 
-        const parsed = JSON.parse(savedChapters);
-        if (parsed && parsed.length > 0) setChapters(parsed);
-      } catch (e) { 
+      if (!error && data && data.length > 0) {
+        const formatted: Chapter[] = data.map((item: any) => ({
+          id: item.id || `cap-${item.number}`,
+          number: item.number,
+          title: item.title || `Capítulo ${item.number}`,
+          pages: item.pages || []
+        }));
+        setChapters(formatted);
+      } else {
         setChapters(INITIAL_CHAPTERS);
       }
-    } else {
+    } catch (err) {
+      console.error('Error cargando de Supabase:', err);
       setChapters(INITIAL_CHAPTERS);
     }
   };
@@ -204,54 +191,34 @@ export default function App() {
       pages
     };
 
-    if (supabase) {
-      try {
-        const { error } = await supabase
-          .from('chapters')
-          .upsert([newChapter], { onConflict: 'id' });
-        
-        if (error) throw error;
-        showNotification(`¡Capítulo ${chapNumber} publicado en la nube para todo el mundo!`);
-      } catch (err) {
-        console.error("Error al guardar en Supabase:", err);
-        showNotification('Error al guardar en la base de datos.');
-      }
-    } else {
-      showNotification('Aviso: Supabase no está enlazado en este entorno.');
+    try {
+      const { error } = await supabase
+        .from('chapters')
+        .upsert([newChapter], { onConflict: 'id' });
+      
+      if (error) throw error;
+      showNotification(`¡Capítulo ${chapNumber} publicado en la nube para todo el mundo!`);
+      setChapPagesText('');
+      setChapTitle('');
+      loadChaptersFromCloud();
+    } catch (err: any) {
+      console.error("Error al guardar en Supabase:", err);
+      showNotification('Error al guardar en la base de datos: ' + (err.message || ''));
     }
-
-    const updated = [...chapters];
-    const index = updated.findIndex((c) => c.number === chapNumber);
-    if (index >= 0) {
-      updated[index] = newChapter;
-    } else {
-      updated.push(newChapter);
-      updated.sort((a, b) => a.number - b.number);
-    }
-
-    setChapters(updated);
-    localStorage.setItem('pl_latam_chapters', JSON.stringify(updated));
-    setChapPagesText('');
-    setChapTitle('');
-    loadChapters();
   };
 
   const handleDeleteChapter = async (num: number) => {
     if (!window.confirm(`¿Estás seguro de eliminar el capítulo ${num}?`)) return;
 
-    if (supabase) {
-      try {
-        await supabase.from('chapters').delete().eq('number', num);
-      } catch (e) {
-        console.error(e);
-      }
+    try {
+      await supabase.from('chapters').delete().eq('number', num);
+      showNotification(`Capítulo ${num} eliminado de la nube.`);
+      if (selectedChapter?.number === num) setSelectedChapter(null);
+      loadChaptersFromCloud();
+    } catch (err) {
+      console.error(err);
+      showNotification('No se pudo eliminar de la base de datos.');
     }
-
-    const updated = chapters.filter((c) => c.number !== num);
-    setChapters(updated);
-    localStorage.setItem('pl_latam_chapters', JSON.stringify(updated));
-    showNotification(`Capítulo ${num} eliminado.`);
-    if (selectedChapter?.number === num) setSelectedChapter(null);
   };
 
   const handleUpdateCharacterImage = (e: React.FormEvent) => {
@@ -263,8 +230,7 @@ export default function App() {
       return c;
     });
     setCharacters(updated);
-    localStorage.setItem('pl_latam_characters', JSON.stringify(updated));
-    showNotification('¡Foto de personaje actualizada con éxito!');
+    showNotification('¡Foto de personaje actualizada!');
     setCharImageUrl('');
   };
 
@@ -647,7 +613,7 @@ export default function App() {
                     className="w-full bg-pink-600 hover:bg-pink-500 text-white font-bold py-2.5 rounded-lg transition flex items-center justify-center gap-2 text-sm"
                   >
                     <Save size={18} />
-                    Guardar / Publicar Capítulo
+                    Guardar / Publicar Capítulo en la Nube
                   </button>
                 </form>
 
