@@ -61,7 +61,7 @@ const INITIAL_CHARACTERS: Character[] = [
   { id: 'char-11', name: 'Gaho Zen', group: 'Akanyatsura', role: 'Profesor', occupation: 'Profesor de educación física', classroom: 'Curso general de secundaria, 2º año, clase C', club: 'Asesor del club de judo', description: 'Es un gran fanfarrón con los bíceps, y tiene los músculos más voluminosos de la escuela.', image: 'https://i.imgur.com/SDVJOq3.jpeg' },
   { id: 'char-12', name: 'Masaki Hokusai', group: 'Akanyatsura', role: 'Estudiante', academicLevel: '3er año, curso general, Clase D', club: 'Club de tiro con arco', council: 'Departamento de animales', description: 'Es un gigante gentil que prefiere pasar tiempo en el patio con los gatos en lugar de asistir a clases.', image: 'https://i.imgur.com/rJJIj9C.jpeg' },
   { id: 'char-13', name: 'Maruyama Reo', group: 'Akanyatsura', role: 'Estudiante', academicLevel: '1er año, curso general, Clase E', club: 'Club de música', council: 'N/A', description: 'Un pequeño y astuto demonio que se ganó el apodo de "El Senpai Asesino".', image: 'https://i.imgur.com/MMda3Im.jpeg' },
-  { id: 'char-14', name: 'Ito Satsuki', group: 'Akanyatsura', role: 'Estudiante', academicLevel: '1er año, curso general, Clase A', club: 'Club de baloncesto', council: 'N/A', description: 'Un delincuente de élite que ha logrado la impresionante hazaña de reprobar absolutamente todas las materias.', image: 'https://i.imgur.com/S1sMDHB.jpeg' },
+  { id: 'char-14', name: 'Ito Satsuki', group: 'Akanyatsura', role: 'Estudiante', academicLevel: '1er año, curso general, Clase A', club: 'Club de baloncesto', council: 'N/A', description: 'Un delincuente de élite que has logrado la impresionante hazaña de reprobar absolutamente todas las materias.', image: 'https://i.imgur.com/S1sMDHB.jpeg' },
 
   // Amprule
   { id: 'char-15', name: 'Yeon Dongha', group: 'Amprule', role: 'Estudiante', academicLevel: '3er año, curso avanzado', club: 'Club de arte', council: 'Presidente del consejo estudiantil de secundaria', description: 'Este pequeño emperador gobierna con puño de hierro sobre la clase de secundaria.', image: 'https://i.imgur.com/ysTNgqU.jpeg' },
@@ -89,13 +89,27 @@ const INITIAL_CHARACTERS: Character[] = [
   { id: 'char-29', name: 'Shingu Haruomi', group: 'BURAIKAN', role: 'Personal', occupation: 'Director', description: 'El carismático director que dirige la escuela al lado del presidente.', image: 'https://i.imgur.com/iY8x4Zh.jpeg' }
 ];
 
-// CREAMOS LOS 18 CAPÍTULOS INICIALES (PUEDES AGREGAR LOS LINKS DE SUS PÁGINAS AQUÍ O DESDE EL PANEL)
-const INITIAL_CHAPTERS: Chapter[] = Array.from({ length: 18 }, (_, i) => ({
-  id: `cap-${i + 1}`,
-  number: i + 1,
-  title: `Capítulo ${i + 1}`,
-  pages: [] 
-}));
+// 18 CAPÍTULOS INICIALES (AQUÍ PUEDES AGREGAR LOS LINKS DE TUS PÁGINAS DIRECTAMENTE)
+const INITIAL_CHAPTERS: Chapter[] = [
+  { id: 'cap-1', number: 1, title: 'Capítulo 1', pages: [] },
+  { id: 'cap-2', number: 2, title: 'Capítulo 2', pages: [] },
+  { id: 'cap-3', number: 3, title: 'Capítulo 3', pages: [] },
+  { id: 'cap-4', number: 4, title: 'Capítulo 4', pages: [] },
+  { id: 'cap-5', number: 5, title: 'Capítulo 5', pages: [] },
+  { id: 'cap-6', number: 6, title: 'Capítulo 6', pages: [] },
+  { id: 'cap-7', number: 7, title: 'Capítulo 7', pages: [] },
+  { id: 'cap-8', number: 8, title: 'Capítulo 8', pages: [] },
+  { id: 'cap-9', number: 9, title: 'Capítulo 9', pages: [] },
+  { id: 'cap-10', number: 10, title: 'Capítulo 10', pages: [] },
+  { id: 'cap-11', number: 11, title: 'Capítulo 11', pages: [] },
+  { id: 'cap-12', number: 12, title: 'Capítulo 12', pages: [] },
+  { id: 'cap-13', number: 13, title: 'Capítulo 13', pages: [] },
+  { id: 'cap-14', number: 14, title: 'Capítulo 14', pages: [] },
+  { id: 'cap-15', number: 15, title: 'Capítulo 15', pages: [] },
+  { id: 'cap-16', number: 16, title: 'Capítulo 16', pages: [] },
+  { id: 'cap-17', number: 17, title: 'Capítulo 17', pages: [] },
+  { id: 'cap-18', number: 18, title: 'Capítulo 18', pages: [] }
+];
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<'manga' | 'characters' | 'admin'>('manga');
@@ -122,16 +136,22 @@ export default function App() {
   const [notification, setNotification] = useState<string>('');
 
   useEffect(() => {
+    // Forzamos que si hay datos viejos en el navegador, se sincronicen con los 18 capítulos oficiales
     const savedChapters = localStorage.getItem('pl_latam_chapters');
     if (savedChapters) {
       try { 
         const parsed = JSON.parse(savedChapters);
         if (parsed && parsed.length > 0) {
-          // Aseguramos que existan siempre los 18 capítulos
+          // Fusionamos para asegurar que estén los 18 capítulos listos
           setChapters(parsed);
+        } else {
+          setChapters(INITIAL_CHAPTERS);
         }
-      } catch (e) { console.error(e); }
+      } catch (e) { 
+        setChapters(INITIAL_CHAPTERS);
+      }
     } else {
+      setChapters(INITIAL_CHAPTERS);
       localStorage.setItem('pl_latam_chapters', JSON.stringify(INITIAL_CHAPTERS));
     }
 
