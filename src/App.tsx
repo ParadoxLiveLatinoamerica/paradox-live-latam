@@ -14,7 +14,8 @@ import {
   EyeOff,
   Radio,
   User,
-  Users
+  Users,
+  CheckCircle2
 } from 'lucide-react';
 
 // ==========================================
@@ -29,6 +30,7 @@ interface Chapter {
   number: number;
   title: string;
   pages: string[];
+  credits?: string;
 }
 
 interface Character {
@@ -80,24 +82,24 @@ const INITIAL_CHARACTERS: Character[] = [
 ];
 
 const INITIAL_CHAPTERS: Chapter[] = [
-  { id: "cap-1", number: 1, title: "Capítulo 1", pages: ["https://i.imgur.com/XAS2iVk.jpeg", "https://i.imgur.com/MNnUKjM.jpeg", "https://i.imgur.com/f8c4j3Y.jpeg"] },
-  { id: "cap-2", number: 2, title: "Capítulo 2", pages: ["https://i.imgur.com/m6xdydz.jpeg", "https://i.imgur.com/qdxNUtl.jpeg", "https://i.imgur.com/muYCLJu.jpeg"] },
-  { id: "cap-3", number: 3, title: "Capítulo 3", pages: ["https://i.imgur.com/UkUEZgZ.jpeg", "https://i.imgur.com/4B5x9D3.jpeg", "https://i.imgur.com/B8NZCid.jpeg"] },
-  { id: "cap-4", number: 4, title: "Capítulo 4", pages: ["https://i.imgur.com/GIAOdMn.jpeg", "https://i.imgur.com/eb1XJ1m.jpeg", "https://i.imgur.com/HUSfxHU.jpeg"] },
-  { id: "cap-5", number: 5, title: "Capítulo 5", pages: ["https://i.imgur.com/eMYK4rf.jpeg", "https://i.imgur.com/mlCE4l2.jpeg", "https://i.imgur.com/53E0xQx.jpeg"] },
-  { id: "cap-6", number: 6, title: "Capítulo 6", pages: ["https://i.imgur.com/FsxIjzl.jpeg", "https://i.imgur.com/rCAUxk7.jpeg", "https://i.imgur.com/IkehzeN.jpeg"] },
-  { id: "cap-7", number: 7, title: "Capítulo 7", pages: ["https://i.imgur.com/hqTZC4U.jpeg", "https://i.imgur.com/MclvqJB.jpeg", "https://i.imgur.com/91vl20j.jpeg"] },
-  { id: "cap-8", number: 8, title: "Capítulo 8", pages: ["https://i.imgur.com/STbr9j4.jpeg", "https://i.imgur.com/rkWqRz1.jpeg", "https://i.imgur.com/tswZG2s.jpeg"] },
-  { id: "cap-9", number: 9, title: "Capítulo 9", pages: ["https://i.imgur.com/gVLfs6a.jpeg", "https://i.imgur.com/FHeE3jn.jpeg", "https://i.imgur.com/wXboHVj.jpeg"] },
-  { id: "cap-10", number: 10, title: "Capítulo 10", pages: ["https://i.imgur.com/WzET5Vk.jpeg", "https://i.imgur.com/dNW2FNP.jpeg", "https://i.imgur.com/paV5s6V.jpeg"] },
-  { id: "cap-11", number: 11, title: "Capítulo 11", pages: ["https://i.imgur.com/8WSFFO2.jpeg", "https://i.imgur.com/wdkRbE6.jpeg", "https://i.imgur.com/3nG4Cgr.jpeg"] },
-  { id: "cap-12", number: 12, title: "Capítulo 12", pages: ["https://i.imgur.com/HLSyQTe.jpeg", "https://i.imgur.com/tQB9nFt.jpeg", "https://i.imgur.com/dOhFz2J.jpeg"] },
-  { id: "cap-13", number: 13, title: "Capítulo 13", pages: ["https://i.imgur.com/NRXI5qk.jpeg", "https://i.imgur.com/2JIyzIS.jpeg", "https://i.imgur.com/GJJTjVr.jpeg"] },
-  { id: "cap-14", number: 14, title: "Capítulo 14", pages: ["https://i.imgur.com/GQ09xoh.jpeg", "https://i.imgur.com/4BXRA9b.jpeg", "https://i.imgur.com/HSDp1Xt.jpeg"] },
-  { id: "cap-15", number: 15, title: "Capítulo 15", pages: ["https://i.imgur.com/bkXSM8F.jpeg", "https://i.imgur.com/8HLCfd6.jpeg", "https://i.imgur.com/t9xI5JD.jpeg"] },
-  { id: "cap-16", number: 16, title: "Capítulo 16", pages: ["https://i.imgur.com/ZMKcYkh.jpeg", "https://i.imgur.com/xOclLfS.jpeg", "https://i.imgur.com/nCcNLPJ.jpeg"] },
-  { id: "cap-17", number: 17, title: "Capítulo 17", pages: ["https://i.imgur.com/LwAKthp.jpeg", "https://i.imgur.com/UP8n6at.jpeg", "https://i.imgur.com/X41npYa.jpeg"] },
-  { id: "cap-18", number: 18, title: "Capítulo 18", pages: ["https://i.imgur.com/Ld0Hg4X.jpeg", "https://i.imgur.com/fuCJD1Q.jpeg", "https://i.imgur.com/5tUjryh.jpeg"] }
+  { id: "cap-1", number: 1, title: "Capítulo 1", pages: ["https://i.imgur.com/XAS2iVk.jpeg", "https://i.imgur.com/MNnUKjM.jpeg", "https://i.imgur.com/f8c4j3Y.jpeg"], credits: "Traducido y editado por Paradox Live Latam" },
+  { id: "cap-2", number: 2, title: "Capítulo 2", pages: ["https://i.imgur.com/m6xdydz.jpeg", "https://i.imgur.com/qdxNUtl.jpeg", "https://i.imgur.com/muYCLJu.jpeg"], credits: "Traducido y editado por Paradox Live Latam" },
+  { id: "cap-3", number: 3, title: "Capítulo 3", pages: ["https://i.imgur.com/UkUEZgZ.jpeg", "https://i.imgur.com/4B5x9D3.jpeg", "https://i.imgur.com/B8NZCid.jpeg"], credits: "Traducido y editado por Paradox Live Latam" },
+  { id: "cap-4", number: 4, title: "Capítulo 4", pages: ["https://i.imgur.com/GIAOdMn.jpeg", "https://i.imgur.com/eb1XJ1m.jpeg", "https://i.imgur.com/HUSfxHU.jpeg"], credits: "Traducido y editado por Paradox Live Latam" },
+  { id: "cap-5", number: 5, title: "Capítulo 5", pages: ["https://i.imgur.com/eMYK4rf.jpeg", "https://i.imgur.com/mlCE4l2.jpeg", "https://i.imgur.com/53E0xQx.jpeg"], credits: "Traducido y editado por Paradox Live Latam" },
+  { id: "cap-6", number: 6, title: "Capítulo 6", pages: ["https://i.imgur.com/FsxIjzl.jpeg", "https://i.imgur.com/rCAUxk7.jpeg", "https://i.imgur.com/IkehzeN.jpeg"], credits: "Traducido y editado por Paradox Live Latam" },
+  { id: "cap-7", number: 7, title: "Capítulo 7", pages: ["https://i.imgur.com/hqTZC4U.jpeg", "https://i.imgur.com/MclvqJB.jpeg", "https://i.imgur.com/91vl20j.jpeg"], credits: "Traducido y editado por Paradox Live Latam" },
+  { id: "cap-8", number: 8, title: "Capítulo 8", pages: ["https://i.imgur.com/STbr9j4.jpeg", "https://i.imgur.com/rkWqRz1.jpeg", "https://i.imgur.com/tswZG2s.jpeg"], credits: "Traducido y editado por Paradox Live Latam" },
+  { id: "cap-9", number: 9, title: "Capítulo 9", pages: ["https://i.imgur.com/gVLfs6a.jpeg", "https://i.imgur.com/FHeE3jn.jpeg", "https://i.imgur.com/wXboHVj.jpeg"], credits: "Traducido y editado por Paradox Live Latam" },
+  { id: "cap-10", number: 10, title: "Capítulo 10", pages: ["https://i.imgur.com/WzET5Vk.jpeg", "https://i.imgur.com/dNW2FNP.jpeg", "https://i.imgur.com/paV5s6V.jpeg"], credits: "Traducido y editado por Paradox Live Latam" },
+  { id: "cap-11", number: 11, title: "Capítulo 11", pages: ["https://i.imgur.com/8WSFFO2.jpeg", "https://i.imgur.com/wdkRbE6.jpeg", "https://i.imgur.com/3nG4Cgr.jpeg"], credits: "Traducido y editado por Paradox Live Latam" },
+  { id: "cap-12", number: 12, title: "Capítulo 12", pages: ["https://i.imgur.com/HLSyQTe.jpeg", "https://i.imgur.com/tQB9nFt.jpeg", "https://i.imgur.com/dOhFz2J.jpeg"], credits: "Traducido y editado por Paradox Live Latam" },
+  { id: "cap-13", number: 13, title: "Capítulo 13", pages: ["https://i.imgur.com/NRXI5qk.jpeg", "https://i.imgur.com/2JIyzIS.jpeg", "https://i.imgur.com/GJJTjVr.jpeg"], credits: "Traducido y editado por Paradox Live Latam" },
+  { id: "cap-14", number: 14, title: "Capítulo 14", pages: ["https://i.imgur.com/GQ09xoh.jpeg", "https://i.imgur.com/4BXRA9b.jpeg", "https://i.imgur.com/HSDp1Xt.jpeg"], credits: "Traducido y editado por Paradox Live Latam" },
+  { id: "cap-15", number: 15, title: "Capítulo 15", pages: ["https://i.imgur.com/bkXSM8F.jpeg", "https://i.imgur.com/8HLCfd6.jpeg", "https://i.imgur.com/t9xI5JD.jpeg"], credits: "Traducido y editado por Paradox Live Latam" },
+  { id: "cap-16", number: 16, title: "Capítulo 16", pages: ["https://i.imgur.com/ZMKcYkh.jpeg", "https://i.imgur.com/xOclLfS.jpeg", "https://i.imgur.com/nCcNLPJ.jpeg"], credits: "Traducido y editado por Paradox Live Latam" },
+  { id: "cap-17", number: 17, title: "Capítulo 17", pages: ["https://i.imgur.com/LwAKthp.jpeg", "https://i.imgur.com/UP8n6at.jpeg", "https://i.imgur.com/X41npYa.jpeg"], credits: "Traducido y editado por Paradox Live Latam" },
+  { id: "cap-18", number: 18, title: "Capítulo 18", pages: ["https://i.imgur.com/Ld0Hg4X.jpeg", "https://i.imgur.com/fuCJD1Q.jpeg", "https://i.imgur.com/5tUjryh.jpeg"], credits: "Traducido y editado por Paradox Live Latam" }
 ];
 
 export default function App() {
@@ -118,19 +120,36 @@ export default function App() {
   const [chapNumber, setChapNumber] = useState<number>(1);
   const [chapTitle, setChapTitle] = useState<string>('');
   const [chapPagesText, setChapPagesText] = useState<string>('');
+  const [chapCredits, setChapCredits] = useState<string>('Traducción y edición: Paradox Live Latam');
   
   const [selectedCharId, setSelectedCharId] = useState<string>(INITIAL_CHARACTERS[0].id);
   const [charImageUrl, setCharImageUrl] = useState<string>('');
 
   const [notification, setNotification] = useState<string>('');
+  const [readChapters, setReadChapters] = useState<Record<number, boolean>>({});
 
   useEffect(() => {
-    // Carga segura que nunca rompe la página
     loadChaptersSafely();
     const savedStatus = localStorage.getItem('pl_latam_status');
     if (savedStatus) setMangaStatus(savedStatus);
     setCharacters(INITIAL_CHARACTERS);
+
+    // Cargar capítulos marcados como leídos
+    const savedRead = localStorage.getItem('pl_latam_read_chapters');
+    if (savedRead) {
+      try {
+        setReadChapters(JSON.parse(savedRead));
+      } catch (e) {}
+    }
   }, []);
+
+  const toggleReadStatus = (num: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const updated = { ...readChapters, [num]: !readChapters[num] };
+    setReadChapters(updated);
+    localStorage.setItem('pl_latam_read_chapters', JSON.stringify(updated));
+    showNotification(updated[num] ? `Capítulo ${num} marcado como visto` : `Capítulo ${num} desmarcado`);
+  };
 
   const loadChaptersSafely = async () => {
     try {
@@ -144,7 +163,8 @@ export default function App() {
           id: item.id || `cap-${item.number}`,
           number: item.number,
           title: item.title || `Capítulo ${item.number}`,
-          pages: item.pages || []
+          pages: item.pages || [],
+          credits: item.credits || 'Traducido y editado por Paradox Live Latam'
         }));
         setChapters(formatted);
         return;
@@ -153,7 +173,6 @@ export default function App() {
       console.log("Usando respaldo local por seguridad");
     }
 
-    // Respaldo por defecto para que abra al instante
     const saved = localStorage.getItem('pl_latam_chapters');
     if (saved) {
       try {
@@ -200,10 +219,10 @@ export default function App() {
       id: `cap-${chapNumber}`,
       number: chapNumber,
       title: chapTitle || `Capítulo ${chapNumber}`,
-      pages
+      pages,
+      credits: chapCredits.trim() || 'Traducido y editado por Paradox Live Latam'
     };
 
-    // Intentar subir a Supabase para todos
     try {
       await supabase
         .from('chapters')
@@ -212,7 +231,6 @@ export default function App() {
       console.error("Supabase error al guardar:", err);
     }
 
-    // Actualizar localmente también
     const updated = [...chapters];
     const index = updated.findIndex((c) => c.number === chapNumber);
     if (index >= 0) {
@@ -330,67 +348,48 @@ export default function App() {
                 </h2>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                  {chapters.map((chap) => (
-                    <div
-                      key={chap.id}
-                      onClick={() => setSelectedChapter(chap)}
-                      className="p-4 rounded-xl bg-slate-900 border border-slate-800 hover:border-pink-500/50 cursor-pointer transition flex items-center justify-between group"
-                    >
-                      <div>
-                        <span className="font-bold text-white group-hover:text-pink-400 transition">
-                          Capítulo {chap.number}
-                        </span>
-                        <p className="text-xs text-slate-500 mt-0.5">
-                          {chap.pages.length > 0 ? `${chap.pages.length} páginas` : 'Próximamente'}
-                        </p>
+                  {chapters.map((chap) => {
+                    const isRead = readChapters[chap.number];
+                    return (
+                      <div
+                        key={chap.id}
+                        onClick={() => setSelectedChapter(chap)}
+                        className={`p-4 rounded-xl bg-slate-900 border cursor-pointer transition flex items-center justify-between group ${isRead ? 'border-emerald-500/40 bg-slate-900/80' : 'border-slate-800 hover:border-pink-500/50'}`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <button
+                            onClick={(e) => toggleReadStatus(chap.number, e)}
+                            className={`p-2 rounded-lg transition ${isRead ? 'text-emerald-400 bg-emerald-950/60' : 'text-slate-500 hover:text-slate-300 bg-slate-950'}`}
+                            title={isRead ? "Marcado como visto" : "Marcar como visto"}
+                          >
+                            {isRead ? <Eye size={18} /> : <EyeOff size={18} />}
+                          </button>
+                          <div>
+                            <span className="font-bold text-white group-hover:text-pink-400 transition flex items-center gap-1.5">
+                              Capítulo {chap.number}
+                              {isRead && <CheckCircle2 size={14} className="text-emerald-400" />}
+                            </span>
+                            <p className="text-xs text-slate-500 mt-0.5">
+                              {chap.pages.length > 0 ? `${chap.pages.length} páginas` : 'Próximamente'}
+                            </p>
+                          </div>
+                        </div>
+                        <ChevronRight size={18} className="text-slate-600 group-hover:text-pink-400 transition" />
                       </div>
-                      <ChevronRight size={18} className="text-slate-600 group-hover:text-pink-400 transition" />
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             ) : (
               <div>
-                <div className="flex items-center justify-between mb-4 bg-slate-900 p-3 rounded-xl border border-slate-800">
-                  <button
-                    onClick={() => setSelectedChapter(null)}
-                    className="flex items-center gap-1 text-sm font-semibold text-slate-300 hover:text-pink-400 transition"
-                  >
-                    <BookOpen size={16} />
-                    Lista de Capítulos
-                  </button>
-
-                  <span className="font-bold text-pink-400">Capítulo {selectedChapter.number}</span>
-
-                  <div className="flex items-center gap-1">
-                    {selectedChapter.number > 1 && (
-                      <button
-                        onClick={() => {
-                          const prev = chapters.find((c) => c.number === selectedChapter.number - 1);
-                          if (prev) setSelectedChapter(prev);
-                        }}
-                        className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300"
-                        title="Capítulo anterior"
-                      >
-                        <ChevronLeft size={18} />
-                      </button>
-                    )}
-                    {selectedChapter.number < chapters.length && (
-                      <button
-                        onClick={() => {
-                          const next = chapters.find((c) => c.number === selectedChapter.number + 1);
-                          if (next) setSelectedChapter(next);
-                        }}
-                        className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300"
-                        title="Capítulo siguiente"
-                      >
-                        <ChevronRight size={18} />
-                      </button>
-                    )}
-                  </div>
+                {/* Título arriba limpio */}
+                <div className="text-center mb-6">
+                  <span className="text-xs uppercase tracking-widest text-pink-500 font-bold">Paralove School</span>
+                  <h2 className="text-2xl font-bold text-white">Capítulo {selectedChapter.number} {selectedChapter.title ? `- ${selectedChapter.title}` : ''}</h2>
                 </div>
 
-                <div className="flex flex-col items-center gap-2 max-w-2xl mx-auto">
+                {/* Páginas del manga */}
+                <div className="flex flex-col items-center gap-2 max-w-2xl mx-auto mb-8">
                   {selectedChapter.pages && selectedChapter.pages.length > 0 ? (
                     selectedChapter.pages.map((imgUrl, idx) => (
                       <img
@@ -406,6 +405,90 @@ export default function App() {
                       <p>Este capítulo aún no tiene páginas publicadas.</p>
                     </div>
                   )}
+                </div>
+
+                {/* Créditos de traducción al finalizar el capítulo */}
+                <div className="max-w-2xl mx-auto mb-8 p-4 rounded-xl bg-slate-900 border border-slate-800 text-center">
+                  <p className="text-xs text-slate-400 font-medium uppercase tracking-wider mb-1">Créditos de este capítulo</p>
+                  <p className="text-sm font-bold text-pink-400">{selectedChapter.credits || 'Traducido y editado por Paradox Live Latam'}</p>
+                </div>
+
+                {/* Navegación y Botones ABAJO (Más cómodo) */}
+                <div className="max-w-2xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 bg-slate-900 p-4 rounded-xl border border-slate-800 mb-10">
+                  <button
+                    onClick={() => {
+                      const currentNum = selectedChapter.number;
+                      const updated = { ...readChapters, [currentNum]: true };
+                      setReadChapters(updated);
+                      localStorage.setItem('pl_latam_read_chapters', JSON.stringify(updated));
+                      setSelectedChapter(null);
+                    }}
+                    className="w-full sm:w-auto flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 transition"
+                  >
+                    <BookOpen size={16} />
+                    Volver a Lista
+                  </button>
+
+                  <div className="flex items-center gap-2 w-full sm:w-auto justify-center">
+                    {selectedChapter.number > 1 && (
+                      <button
+                        onClick={() => {
+                          const prev = chapters.find((c) => c.number === selectedChapter.number - 1);
+                          if (prev) setSelectedChapter(prev);
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
+                        className="flex-1 sm:flex-none flex items-center justify-center gap-1 px-4 py-2 rounded-lg bg-pink-600 hover:bg-pink-500 text-white font-semibold text-sm transition"
+                      >
+                        <ChevronLeft size={16} />
+                        Anterior
+                      </button>
+                    )}
+                    {selectedChapter.number < chapters.length && (
+                      <button
+                        onClick={() => {
+                          const currentNum = selectedChapter.number;
+                          const updated = { ...readChapters, [currentNum]: true };
+                          setReadChapters(updated);
+                          localStorage.setItem('pl_latam_read_chapters', JSON.stringify(updated));
+                          
+                          const next = chapters.find((c) => c.number === selectedChapter.number + 1);
+                          if (next) setSelectedChapter(next);
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
+                        className="flex-1 sm:flex-none flex items-center justify-center gap-1 px-4 py-2 rounded-lg bg-pink-600 hover:bg-pink-500 text-white font-semibold text-sm transition"
+                      >
+                        Siguiente
+                        <ChevronRight size={16} />
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Lista Completa de Capítulos al Final */}
+                <div className="max-w-2xl mx-auto border-t border-slate-800 pt-6">
+                  <h3 className="text-md font-bold mb-3 text-slate-300 flex items-center gap-2">
+                    <BookOpen size={16} className="text-pink-500" />
+                    Seleccionar otro capítulo
+                  </h3>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    {chapters.map((chap) => {
+                      const isCurrent = chap.number === selectedChapter.number;
+                      const isRead = readChapters[chap.number];
+                      return (
+                        <button
+                          key={chap.id}
+                          onClick={() => {
+                            setSelectedChapter(chap);
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                          }}
+                          className={`p-2.5 rounded-lg text-xs font-bold transition flex items-center justify-between ${isCurrent ? 'bg-pink-600 text-white' : isRead ? 'bg-emerald-950/60 border border-emerald-800/60 text-emerald-300' : 'bg-slate-900 border border-slate-800 text-slate-300 hover:border-pink-500'}`}
+                        >
+                          <span>Cap. {chap.number}</span>
+                          {isRead && <CheckCircle2 size={12} className="text-emerald-400" />}
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
             )}
@@ -615,6 +698,17 @@ export default function App() {
                       placeholder="Ej: El comienzo"
                       value={chapTitle}
                       onChange={(e) => setChapTitle(e.target.value)}
+                      className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-pink-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-slate-400 mb-1">Créditos de Traducción / Edición</label>
+                    <input
+                      type="text"
+                      placeholder="Ej: Trad. TuNombre / Ed. TuNombre"
+                      value={chapCredits}
+                      onChange={(e) => setChapCredits(e.target.value)}
                       className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-pink-500"
                     />
                   </div>
