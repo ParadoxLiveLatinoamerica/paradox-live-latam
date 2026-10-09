@@ -521,8 +521,9 @@ export default function App() {
 
                   <button
                     type="submit"
-                    className="w-full bg-pink-600 hover:bg-pink-500 text-white font-bold py-2.5 rounded-lg transition text-sm"
+                    className="w-full bg-pink-600 hover:bg-pink-500 text-white font-bold py-2.5 rounded-lg transition flex items-center justify-center gap-2 text-sm"
                   >
+                    <Save size={18} />
                     Guardar / Publicar Capítulo
                   </button>
                 </form>
