@@ -1,26 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
-import { 
-  Settings, 
-  Image as ImageIcon, 
-  Trash2, 
-  ChevronLeft, 
-  ChevronRight, 
-  BookOpen, 
-  Save, 
-  Search,
-  Lock,
-  Eye,
-  EyeOff,
-  Radio,
-  User,
-  Users
-} from 'lucide-react';
 
-// Conexión a Supabase usando variables de entorno
-const supabaseUrl = process.env.REACT_APP_SUPABASE_URL || '';
-const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY || '';
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Conexión a Supabase compatible con Vite y Vercel
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || process.env.REACT_APP_SUPABASE_URL || '';
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || process.env.REACT_APP_SUPABASE_ANON_KEY || '';
+
+export const supabase = createClient(
+  supabaseUrl || 'https://placeholder.supabase.co', 
+  supabaseAnonKey || 'placeholder'
+);
 
 interface Chapter {
   id: string;
@@ -34,16 +22,8 @@ interface Character {
   name: string;
   group: string;
   role: string;
-  image?: string;
-  academicLevel?: string;
-  club?: string;
-  council?: string;
-  occupation?: string;
-  classroom?: string;
   description: string;
 }
-
-const ADMIN_PASSWORD = "paradoxlatamadmin";
 
 export default function App() {
   const [chapters, setChapters] = useState<Chapter[]>([]);
