@@ -84,6 +84,40 @@ const INITIAL_CHARACTERS: Character[] = [
   { name: 'Shingu Haruomi', group: 'BURAIKAN', role: 'Personal', occupation: 'Director', description: 'El carismático director que dirige la escuela al lado del presidente.' }
 ];
 
+// Función helper para comprimir imágenes antes de guardarlas
+const compressImageFile = (file: File): Promise<string> => {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event) => {
+      const img = new Image();
+      img.src = event.target?.result as string;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const MAX_WIDTH = 800; // Ancho máximo suficiente para pantalla móvil
+        let width = img.width;
+        let height = img.height;
+
+        if (width > MAX_WIDTH) {
+          height = Math.round((height * MAX_WIDTH) / width);
+          width = MAX_WIDTH;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.drawImage(img, 0, 0, width, height);
+          // Comprimir al 60% de calidad JPEG para ahorrar memoria
+          resolve(canvas.toDataURL('image/jpeg', 0.6));
+        } else {
+          resolve(event.target?.result as string);
+        }
+      };
+    };
+  });
+};
+
 export default function App() {
   const [activeTab, setActiveTab] = useState<'manga' | 'characters' | 'admin'>('manga');
   const [chapters, setChapters] = useState<Chapter[]>([]);
@@ -100,6 +134,7 @@ export default function App() {
   const [chapTitle, setChapTitle] = useState<string>('');
   const [chapPagesText, setChapPagesText] = useState<string>('');
   const [notification, setNotification] = useState<string>('');
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
 
   useEffect(() => {
     const savedChapters = localStorage.getItem('pl_latam_chapters');
@@ -124,7 +159,7 @@ export default function App() {
 
   const showNotification = (msg: string) => {
     setNotification(msg);
-    setTimeout(() => setNotification(''), 3000);
+    setTimeout(() => setNotification(''), 3500);
   };
 
   const handleAdminAuth = (e: React.FormEvent) => {
@@ -138,24 +173,26 @@ export default function App() {
     }
   };
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
-    const fileList = Array.from(files);
-    const promises = fileList.map((file) => {
-      return new Promise<string>((resolve) => {
-        const reader = new FileReader();
-        reader.onload = (event) => resolve(event.target?.result as string || '');
-        reader.readAsDataURL(file);
-      });
-    });
+    setIsProcessing(true);
+    showNotification('Comprimiendo fotos para ahorrar espacio...');
 
-    Promise.all(promises).then((dataUrls) => {
-      const formattedUrls = dataUrls.join('\n');
+    const fileList = Array.from(files);
+    const promises = fileList.map((file) => compressImageFile(file));
+
+    try {
+      const compressedUrls = await Promise.all(promises);
+      const formattedUrls = compressedUrls.join('\n');
       setChapPagesText((prev) => (prev ? `${prev}\n${formattedUrls}` : formattedUrls));
-      showNotification(`${files.length} imagen(es) procesada(s) correctamente.`);
-    });
+      showNotification(`¡${files.length} imagen(es) optimizada(s) y procesada(s)!`);
+    } catch (err) {
+      showNotification('Error al optimizar algunas imágenes.');
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const handleSaveChapter = (e: React.FormEvent) => {
@@ -185,13 +222,12 @@ export default function App() {
     setChapters(updated);
     try {
       localStorage.setItem('pl_latam_chapters', JSON.stringify(updated));
-      showNotification(`¡Capítulo ${chapNumber} guardado correctamente!`);
+      showNotification(`¡Capítulo ${chapNumber} guardado con éxito!`);
+      setChapPagesText('');
+      setChapTitle('');
     } catch (err) {
-      showNotification('Alerta: Las imágenes superan el límite de almacenamiento local.');
+      showNotification('La memoria del navegador está llena. Borra algún capítulo antiguo antes de continuar.');
     }
-
-    setChapPagesText('');
-    setChapTitle('');
   };
 
   const handleDeleteChapter = (num: number) => {
@@ -490,13 +526,16 @@ export default function App() {
 
                   <div>
                     <label className="block text-xs font-bold text-slate-400 mb-1">Subir Fotos desde la Galería</label>
-                    <label className="flex flex-col items-center justify-center p-4 border-2 border-dashed border-slate-700 hover:border-pink-500 rounded-xl cursor-pointer bg-slate-950 transition">
+                    <label className={`flex flex-col items-center justify-center p-4 border-2 border-dashed ${isProcessing ? 'border-pink-500 bg-pink-950/20' : 'border-slate-700 hover:border-pink-500'} rounded-xl cursor-pointer bg-slate-950 transition`}>
                       <Upload size={24} className="text-slate-400 mb-1" />
-                      <span className="text-xs font-semibold text-slate-300">Seleccionar fotos de la Galería</span>
+                      <span className="text-xs font-semibold text-slate-300">
+                        {isProcessing ? 'Comprimiendo imágenes...' : 'Seleccionar fotos de la Galería'}
+                      </span>
                       <input
                         type="file"
                         multiple
                         accept="image/*"
+                        disabled={isProcessing}
                         onChange={handleFileUpload}
                         className="hidden"
                       />
@@ -505,20 +544,21 @@ export default function App() {
 
                   <div>
                     <label className="block text-xs font-bold text-slate-400 mb-1">
-                      URLs de las Páginas (Una por línea o generadas automáticamente)
+                      Páginas procesadas (Optimizado)
                     </label>
                     <textarea
                       rows={4}
                       value={chapPagesText}
                       onChange={(e) => setChapPagesText(e.target.value)}
-                      placeholder="Pega las URLs de las imágenes o usa el botón de arriba"
+                      placeholder="Las imágenes elegidas aparecerán aquí comprimidas"
                       className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-slate-300 focus:outline-none focus:border-pink-500 font-mono"
                     />
                   </div>
 
                   <button
                     type="submit"
-                    className="w-full bg-pink-600 hover:bg-pink-500 text-white font-bold py-2.5 rounded-lg transition flex items-center justify-center gap-2 text-sm"
+                    disabled={isProcessing}
+                    className="w-full bg-pink-600 hover:bg-pink-500 text-white font-bold py-2.5 rounded-lg transition flex items-center justify-center gap-2 text-sm disabled:opacity-50"
                   >
                     <Save size={18} />
                     Guardar / Publicar Capítulo
