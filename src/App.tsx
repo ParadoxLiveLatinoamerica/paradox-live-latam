@@ -17,7 +17,7 @@ import {
   Users
 } from 'lucide-react';
 
-// Inicialización de Supabase con variables de entorno de React
+// Conexión a Supabase usando variables de entorno
 const supabaseUrl = process.env.REACT_APP_SUPABASE_URL || '';
 const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY || '';
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
@@ -50,7 +50,6 @@ export default function App() {
   const [characters, setCharacters] = useState<Character[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Cargar datos desde Supabase al iniciar
   useEffect(() => {
     fetchData();
   }, []);
@@ -64,7 +63,7 @@ export default function App() {
       if (chaptersData) setChapters(chaptersData);
       if (charactersData) setCharacters(charactersData);
     } catch (error) {
-      console.error("Error al cargar datos de Supabase:", error);
+      console.error("Error al cargar datos desde Supabase:", error);
     } finally {
       setLoading(false);
     }
@@ -74,15 +73,14 @@ export default function App() {
     <div className="min-h-screen bg-slate-900 text-white p-6">
       <h1 className="text-3xl font-bold text-center mb-6">Paradox Live LATAM</h1>
       {loading ? (
-        <p className="text-center text-gray-400">Cargando contenido desde Supabase...</p>
+        <p className="text-center text-gray-400">Cargando contenido...</p>
       ) : (
         <div className="max-w-4xl mx-auto space-y-6">
-          <p className="text-green-400 text-center">Conexión a Supabase activa. Capítulos: {chapters.length} | Personajes: {characters.length}</p>
+          <p className="text-green-400 text-center">
+            Conexión activa. Capítulos cargados: {chapters.length} | Personajes: {characters.length}
+          </p>
         </div>
       )}
     </div>
   );
 }
-
-
-  
