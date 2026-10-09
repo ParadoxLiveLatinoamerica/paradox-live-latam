@@ -33,7 +33,7 @@ interface Character {
   description: string;
 }
 
-const ADMIN_PASSWORD = "paradoxlatamadmin"; // <--- Tu contraseña para entrar a la tuerca
+const ADMIN_PASSWORD = "paradoxlatamadmin";
 
 const INITIAL_CHARACTERS: Character[] = [
   // BAE
@@ -91,13 +91,11 @@ export default function App() {
   const [selectedGroup, setSelectedGroup] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState<string>('');
 
-  // Password / Security state
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState<boolean>(false);
   const [inputPassword, setInputPassword] = useState<string>('');
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [passwordError, setPasswordError] = useState<string>('');
 
-  // Form states for Admin
   const [chapNumber, setChapNumber] = useState<number>(1);
   const [chapTitle, setChapTitle] = useState<string>('');
   const [chapPagesText, setChapPagesText] = useState<string>('');
@@ -217,7 +215,6 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">
-      {/* Header */}
       <header className="bg-slate-900 border-b border-slate-800 sticky top-0 z-50">
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => { setActiveTab('manga'); setSelectedChapter(null); }}>
@@ -248,16 +245,13 @@ export default function App() {
         </div>
       </header>
 
-      {/* Notification Banner */}
       {notification && (
         <div className="bg-pink-600 text-white text-center py-2 px-4 text-sm font-bold animate-pulse">
           {notification}
         </div>
       )}
 
-      {/* Main Content */}
       <main className="flex-1 max-w-5xl w-full mx-auto px-4 py-6">
-        {/* MANGA TAB */}
         {activeTab === 'manga' && (
           <div>
             {!selectedChapter ? (
@@ -295,7 +289,6 @@ export default function App() {
                 </div>
               </div>
             ) : (
-              /* Reader View */
               <div>
                 <div className="flex items-center justify-between mb-4 bg-slate-900 p-3 rounded-xl border border-slate-800">
                   <button
@@ -333,118 +326,3 @@ export default function App() {
                         <ChevronRight size={18} />
                       </button>
                     )}
-                  </div>
-                </div>
-
-                {/* Chapter Images */}
-                <div className="flex flex-col items-center gap-2 max-w-2xl mx-auto">
-                  {selectedChapter.pages && selectedChapter.pages.length > 0 ? (
-                    selectedChapter.pages.map((imgUrl, idx) => (
-                      <img
-                        key={idx}
-                        src={imgUrl}
-                        alt={`Página ${idx + 1}`}
-                        className="w-full rounded-lg shadow-lg border border-slate-800"
-                      />
-                    ))
-                  ) : (
-                    <div className="text-center py-16 text-slate-500">
-                      <ImageIcon size={48} className="mx-auto mb-2 opacity-40" />
-                      <p>Este capítulo aún no tiene páginas publicadas.</p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* CHARACTERS TAB */}
-        {activeTab === 'characters' && (
-          <div>
-            <div className="mb-6 flex flex-col md:flex-row gap-4 items-center justify-between">
-              <div className="relative w-full md:w-64">
-                <Search size={18} className="absolute left-3 top-2.5 text-slate-500" />
-                <input
-                  type="text"
-                  placeholder="Buscar estudiante..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-slate-900 border border-slate-800 rounded-lg pl-9 pr-4 py-2 text-sm text-slate-200 focus:outline-none focus:border-pink-500"
-                />
-              </div>
-
-              {/* Group Filter */}
-              <div className="flex flex-wrap gap-1.5 w-full md:w-auto">
-                {groups.map((grp) => (
-                  <button
-                    key={grp}
-                    onClick={() => setSelectedGroup(grp)}
-                    className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition ${selectedGroup === grp ? 'bg-pink-600 text-white' : 'bg-slate-900 border border-slate-800 text-slate-400 hover:text-white'}`}
-                  >
-                    {grp}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Characters List */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {filteredCharacters.map((char, index) => (
-                <div key={index} className="p-4 rounded-xl bg-slate-900 border border-slate-800 flex flex-col justify-between">
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <h3 className="text-lg font-bold text-white">{char.name}</h3>
-                      <div className="flex items-center gap-1.5">
-                        <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-pink-950 text-pink-300 border border-pink-800">
-                          {char.group}
-                        </span>
-                        <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-300">
-                          {char.role}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="space-y-1 mb-3 text-xs text-slate-400">
-                      {char.academicLevel && <p><strong className="text-slate-300">Nivel académico:</strong> {char.academicLevel}</p>}
-                      {char.occupation && <p><strong className="text-slate-300">Ocupación:</strong> {char.occupation}</p>}
-                      {char.classroom && <p><strong className="text-slate-300">Aula:</strong> {char.classroom}</p>}
-                      {char.club && <p><strong className="text-slate-300">Club:</strong> {char.club}</p>}
-                      {char.council && <p><strong className="text-slate-300">Consejo estudiantil:</strong> {char.council}</p>}
-                    </div>
-
-                    <p className="text-sm text-slate-300 italic">{char.description}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* ADMIN TAB */}
-        {activeTab === 'admin' && (
-          <div className="max-w-md mx-auto bg-slate-900 border border-slate-800 rounded-xl p-6">
-            {!isAdminAuthenticated ? (
-              /* Protected Login Form */
-              <form onSubmit={handleAdminAuth} className="space-y-4">
-                <div className="text-center mb-4">
-                  <Lock size={36} className="mx-auto text-pink-500 mb-2" />
-                  <h2 className="text-lg font-bold text-white">Acceso Restringido</h2>
-                  <p className="text-xs text-slate-400">Ingresa la clave de administrador para subir o editar capítulos.</p>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-slate-400 mb-1">Contraseña</label>
-                  <div className="relative">
-                    <input
-                      type={showPassword ? 'text' : 'password'}
-                      value={inputPassword}
-                      onChange={(e) => setInputPassword(e.target.value)}
-                      placeholder="Introduce la contraseña"
-                      className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-pink-500 pr-10"
-                      required
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-3 text-slate-50
