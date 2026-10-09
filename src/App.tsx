@@ -18,10 +18,10 @@ import {
 } from 'lucide-react';
 
 // ==========================================
-// CONFIGURACIÓN DE SUPABASE (CON PROTECCIÓN ANTI-CRASH)
+// CONFIGURACIÓN CON VITE (Tus variables actuales)
 // ==========================================
-const supabaseUrl = process.env.REACT_APP_SUPABASE_URL || '';
-const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY || '';
+const supabaseUrl = (import.meta as any).env?.VITE_SUPABASE_URL || '';
+const supabaseAnonKey = (import.meta as any).env?.VITE_SUPABASE_ANON_KEY || '';
 const supabase = (supabaseUrl && supabaseAnonKey) ? createClient(supabaseUrl, supabaseAnonKey) : null;
 
 interface Chapter {
@@ -124,13 +124,10 @@ export default function App() {
 
   const [notification, setNotification] = useState<string>('');
 
-  // CARGA HÍBRIDA: Intenta leer de Supabase (para que todos lo vean), y si no hay red, usa localstorage
   useEffect(() => {
     loadChapters();
-
     const savedStatus = localStorage.getItem('pl_latam_status');
     if (savedStatus) setMangaStatus(savedStatus);
-
     setCharacters(INITIAL_CHARACTERS);
   }, []);
 
@@ -153,11 +150,11 @@ export default function App() {
           return;
         }
       } catch (err) {
-        console.log('Usando respaldo local por red');
+        console.error('Error conectando a Supabase:', err);
       }
     }
 
-    // Respaldo local si Supabase no está configurado aún o falla
+    // Respaldo local
     const savedChapters = localStorage.getItem('pl_latam_chapters');
     if (savedChapters) {
       try { 
@@ -193,7 +190,6 @@ export default function App() {
     showNotification(`Estado actualizado a: "${status}"`);
   };
 
-  // GUARDAR CAPÍTULO GLOBALMENTE (EN SUPABASE Y LOCAL)
   const handleSaveChapter = async (e: React.FormEvent) => {
     e.preventDefault();
     const pages = chapPagesText
@@ -208,7 +204,6 @@ export default function App() {
       pages
     };
 
-    // 1. Intentar subir a Supabase para que TODO EL MUNDO lo vea en vivo
     if (supabase) {
       try {
         const { error } = await supabase
@@ -216,12 +211,15 @@ export default function App() {
           .upsert([newChapter], { onConflict: 'id' });
         
         if (error) throw error;
+        showNotification(`¡Capítulo ${chapNumber} publicado en la nube para todo el mundo!`);
       } catch (err) {
-        console.error("Error al sincronizar con Supabase:", err);
+        console.error("Error al guardar en Supabase:", err);
+        showNotification('Error al guardar en la base de datos.');
       }
+    } else {
+      showNotification('Aviso: Supabase no está enlazado en este entorno.');
     }
 
-    // 2. Guardar también localmente para refrescar la vista al instante
     const updated = [...chapters];
     const index = updated.findIndex((c) => c.number === chapNumber);
     if (index >= 0) {
@@ -233,13 +231,14 @@ export default function App() {
 
     setChapters(updated);
     localStorage.setItem('pl_latam_chapters', JSON.stringify(updated));
-    showNotification(`¡Capítulo ${chapNumber} publicado globalmente!`);
     setChapPagesText('');
     setChapTitle('');
     loadChapters();
   };
 
   const handleDeleteChapter = async (num: number) => {
+    if (!window.confirm(`¿Estás seguro de eliminar el capítulo ${num}?`)) return;
+
     if (supabase) {
       try {
         await supabase.from('chapters').delete().eq('number', num);
@@ -647,7 +646,7 @@ export default function App() {
                     type="submit"
                     className="w-full bg-pink-600 hover:bg-pink-500 text-white font-bold py-2.5 rounded-lg transition flex items-center justify-center gap-2 text-sm"
                   >
-                    <Save size=-1 />
+                    <Save size={18} />
                     Guardar / Publicar Capítulo
                   </button>
                 </form>
