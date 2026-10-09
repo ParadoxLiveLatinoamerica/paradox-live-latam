@@ -17,9 +17,9 @@ import {
   Users
 } from 'lucide-react';
 
-// Configuración de Supabase utilizando tus variables de entorno
-const SUPABASE_URL = process.env.REACT_APP_SUPABASE_URL || '';
-const SUPABASE_ANON_KEY = process.env.REACT_APP_SUPABASE_ANON_KEY || '';
+// Conexión usando el formato de Vite que tienes en Vercel
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || '';
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 interface Chapter {
@@ -108,11 +108,9 @@ export default function App() {
 
   const [notification, setNotification] = useState<string>('');
 
-  // Cargar datos en tiempo real desde Supabase para TODOS los visitantes
   useEffect(() => {
     async function fetchDataFromSupabase() {
       try {
-        // Cargar Capítulos
         const { data: chapData, error: chapError } = await supabase
           .from('chapters')
           .select('*');
@@ -127,7 +125,6 @@ export default function App() {
           setChapters(DEFAULT_18_CHAPTERS);
         }
 
-        // Cargar Estado del Manga
         const { data: statusData } = await supabase
           .from('settings')
           .select('*')
@@ -187,7 +184,6 @@ export default function App() {
       pages
     };
 
-    // Guardar en Supabase para que se actualice globalmente
     try {
       const { error } = await supabase
         .from('chapters')
