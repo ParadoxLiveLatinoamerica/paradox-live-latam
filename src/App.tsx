@@ -47,26 +47,243 @@ interface Character {
 
 const ADMIN_PASSWORD = "paradoxlatamadmin";
 
-// PERSONAJES OFICIALES DE RESPALDO (INITIAL_CHARACTERS)
+// PERSONAJES OFICIALES CON SUS FOTOS CORRECTAS DE IMGUR
 const INITIAL_CHARACTERS: Character[] = [
+  // BAE
   { id: 'char-1', name: 'Sugasano Allen', group: 'BAE', role: 'Estudiante', academicLevel: '2do año, curso general, Clase C', club: 'Presidente del club de hip-hop', council: 'N/A', description: 'Un presidente del club de hip-hop que aspira a que el club llegue a la cima una vez que se gradúen.', image: 'https://i.imgur.com/c0rngvV.jpeg' },
   { id: 'char-2', name: 'Yeon Hajun', group: 'BAE', role: 'Estudiante', academicLevel: '2do año, curso avanzado', club: 'Club de tenis', council: 'Presidente del consejo estudiantil de la escuela secundaria', description: 'El noble sonriente que dirige la escuela como si fuera su propio castillo.', image: 'https://i.imgur.com/GqXpiP8.jpeg' },
   { id: 'char-3', name: 'Anne Faulkner', group: 'BAE', role: 'Estudiante', academicLevel: '2do año, curso general, Clase B', club: 'Presidenta del club de sastrería', council: 'Comité ejecutivo del festival cultural', description: 'Un influencer abrumadoramente popular.', image: 'https://i.imgur.com/cPsipv2.jpeg' },
+  
+  // cozmez
   { id: 'char-4', name: 'Yatonokami Kanata', group: 'cozmez', role: 'Estudiante', academicLevel: '2do año, curso general, Clase C', club: 'No está en ningún club', council: 'N/A', description: 'Una persona que no tiene miedo de arriesgarse, solo se presenta los días que son necesarios para no reprobar.', image: 'https://i.imgur.com/xh6HHYD.jpeg' },
   { id: 'char-5', name: 'Yatonokami Nayuta', group: 'cozmez', role: 'Estudiante', academicLevel: '2do año, curso general, Clase B', club: 'No está en ningún club', council: 'N/A', description: 'Es el holgazán de clase S más poderoso en la historia de la escuela.', image: 'https://i.imgur.com/n8a52Et.jpeg' },
+  
+  // TCW
   { id: 'char-6', name: 'Saimon Naoakira', group: 'The Cat\'s Whiskers', role: 'Profesor', occupation: 'Profesor de japonés', classroom: 'Curso avanzado de secundaria, primeros años', club: 'Asesor del club de teatro', description: 'Un guardián del tiempo cuya hermosa voz atrajo a miles de estudiantes a una tierra de los sueños.', image: 'https://i.imgur.com/93kdqP2.jpeg' },
   { id: 'char-7', name: 'Kanbayashi Yohei', group: 'The Cat\'s Whiskers', role: 'Personal', occupation: 'Jefe de conserjes', club: 'No afiliado', description: 'Es el guardián de la escuela, siempre está armado con alcohol y cigarrillos.', image: 'https://i.imgur.com/39Pxn9V.jpeg' },
   { id: 'char-8', name: 'Natsume Ryu', group: 'The Cat\'s Whiskers', role: 'Estudiante', academicLevel: '?', club: '?', council: 'N/A', description: 'Un excelente ejemplo de una persona que se supone que ya se ha graduado, pero aún así aparece en el campus todos los días.', image: 'https://i.imgur.com/601gh5F.jpeg' },
   { id: 'char-9', name: 'Ando Shiki', group: 'The Cat\'s Whiskers', role: 'Estudiante', academicLevel: '1er año, curso avanzado', club: 'Club de fútbol', council: 'Departamento de animales', description: 'Es un niño con buena salud y es tan serio que da miedo.', image: 'https://i.imgur.com/yc5snxU.jpeg' },
+
+  // Akanyatsura
   { id: 'char-10', name: 'Suiseki Iori', group: 'Akanyatsura', role: 'Profesor', occupation: 'Profesor de matemáticas', classroom: 'Curso general de secundaria, 3er año, clase F', club: 'Asesor del club de baloncesto', description: 'Es un completo demonio de cálculo mental que inculca en las cabezas de sus alumnos un espíritu temerario.', image: 'https://i.imgur.com/TmlS4Q5.jpeg' },
   { id: 'char-11', name: 'Gaho Zen', group: 'Akanyatsura', role: 'Profesor', occupation: 'Profesor de educación física', classroom: 'Curso general de secundaria, 2º año, clase C', club: 'Asesor del club de judo', description: 'Es un gran fanfarrón con los bíceps, y tiene los músculos más voluminosos de la escuela.', image: 'https://i.imgur.com/SDVJOq3.jpeg' },
   { id: 'char-12', name: 'Masaki Hokusai', group: 'Akanyatsura', role: 'Estudiante', academicLevel: '3er año, curso general, Clase D', club: 'Club de tiro con arco', council: 'Departamento de animales', description: 'Es un gigante gentil que prefiere pasar tiempo en el patio con los gatos en lugar de asistir a clases.', image: 'https://i.imgur.com/rJJIj9C.jpeg' },
-  { id: 'char-13', name: 'Maruyama Reo', group: 'Akanyatsura', role: 'Estudiante', academicLevel: '1er año, curso general', club: 'Club de hip-hop', council: 'N/A', description: 'Miembro de Akanyatsura.', image: 'https://i.imgur.com/rJJIj9C.jpeg' }
+  { id: 'char-13', name: 'Maruyama Reo', group: 'Akanyatsura', role: 'Estudiante', academicLevel: '1er año, curso general, Clase E', club: 'Club de música', council: 'N/A', description: 'Un pequeño y astuto demonio que se ganó el apodo de "El Senpai Asesino".', image: 'https://i.imgur.com/MMda3Im.jpeg' },
+  { id: 'char-14', name: 'Ito Satsuki', group: 'Akanyatsura', role: 'Estudiante', academicLevel: '1er año, curso general, Clase A', club: 'Club de baloncesto', council: 'N/A', description: 'Un delincuente de élite que has logrado la impresionante hazaña de reprobar absolutamente todas las materias.', image: 'https://i.imgur.com/S1sMDHB.jpeg' },
+
+  // Amprule
+  { id: 'char-15', name: 'Yeon Dongha', group: 'Amprule', role: 'Estudiante', academicLevel: '3er año, curso avanzado', club: 'Club de arte', council: 'Presidente del consejo estudiantil de secundaria', description: 'Este pequeño emperador gobierna con puño de hierro sobre la clase de secundaria.', image: 'https://i.imgur.com/ysTNgqU.jpeg' },
+  { id: 'char-16', name: 'Baek Chungsung', group: 'Amprule', role: 'Profesor', occupation: 'Profesor de arte', classroom: 'Curso avanzado de secundaria, segundo año', club: 'Asesor del club de arte', description: 'Este es sin dudas, un profesor masoquista que espera ansiosamente ser castigado por su amo.', image: 'https://i.imgur.com/FRQxsWT.jpeg' },
+
+  // VISTY
+  { id: 'char-17', name: 'Yamato Shogo', group: 'VISTY', role: 'Estudiante', academicLevel: '2do año, curso general, Clase D', club: 'Presidente del club de astronomía', council: 'N/A', description: 'Un joven serio pero un poco tonto, realmente ama las estrellas y las gomitas.', image: 'https://i.imgur.com/wIHHDdY.jpeg' },
+  { id: 'char-18', name: 'Hikage Toma', group: 'VISTY', role: 'Estudiante', academicLevel: '3er año, curso general, Clase F', club: 'Club de música', council: 'Comité ejecutivo del festival cultural', description: 'Un auténtico fiestero con mucho amor para dar, ama la paz y los consejos de belleza.', image: 'https://i.imgur.com/vVq3D6c.jpeg' },
+  { id: 'char-19', name: 'Misuji Kantaro', group: 'VISTY', role: 'Estudiante', academicLevel: '1er año, curso general, Clase C', club: 'Club de artesanía', council: 'Comité ejecutivo del festival cultural', description: 'Es un joven con ojos de cachorrito que prioriza verse bien en las redes sociales.', image: 'https://i.imgur.com/Wm0sJAF.jpeg' },
+  { id: 'char-20', name: 'Kureha Aoi', group: 'VISTY', role: 'Estudiante', academicLevel: '1er año, curso general, Clase A', club: 'Club de teatro, club de jardinería', council: 'N/D', description: 'El príncipe fresco y hermoso del club de teatro.', image: 'https://i.imgur.com/TpB547T.jpeg' },
+
+  // 1Nm8
+  { id: 'char-21', name: 'Itsuki', group: '1Nm8', role: 'Estudiante', academicLevel: '2do año, curso avanzado', club: 'Club de ciencias', council: 'Comité de biblioteca', description: 'Un entusiasta de la eficiencia y precisión sin igual.', image: 'https://i.imgur.com/ZVeW5O8.jpeg' },
+  { id: 'char-22', name: 'Rokuta', group: '1Nm8', role: 'Estudiante', academicLevel: '1er año, curso general, Clase E', club: 'Club de estudios culinarios', council: 'Comité ejecutivo del festival deportivo', description: 'Un niño que parece un cachorro y que infunde miedo en los corazones de los empleados de la tienda de la escuela.', image: 'https://i.imgur.com/PKG84GJ.jpeg' },
+  { id: 'char-23', name: 'Miyama Kei', group: '1Nm8', role: 'Estudiante', academicLevel: '3er año, curso avanzado', club: 'No está en ningún club', council: 'Comité de biblioteca', description: 'Un hermoso joven lleno de misterio que pasa mucho tiempo en la enfermería.', image: 'https://i.imgur.com/RarkCZT.jpeg' },
+
+  // Goku Luck
+  { id: 'char-24', name: 'Tosa Ryoga', group: 'Goku Luck', role: 'Estudiante', academicLevel: '3er año, curso general, Clase F', club: 'Club de judo', council: 'N/A', description: 'Es como un incontrolable perro rabioso.', image: 'https://i.imgur.com/fYY5foO.jpeg' },
+  { id: 'char-25', name: 'Mikoshiba Kenta', group: 'Goku Luck', role: 'Estudiante', academicLevel: '3er año, curso avanzado', club: 'Club de informática', council: 'N/A', description: 'Un juez, jurado y verdugo del juicio final que te invita a adentrarte aún más en la oscuridad.', image: 'https://i.imgur.com/ZdsQ7OU.jpeg' },
+  { id: 'char-26', name: 'Yuto Inukai', group: 'Goku Luck', role: 'Profesor', occupation: 'Profesor de educación cívica', classroom: 'Curso avanzado de secundaria, tercer año', club: 'Asesor del club de tiro con arco', description: 'Es un líder con experiencia y trabajador que oculta una dualidad secreta.', image: 'https://i.imgur.com/x8YIWtc.jpeg' },
+  { id: 'char-27', name: 'Kaida Shion', group: 'Goku Luck', role: 'Personal', occupation: 'Médico escolar', club: 'Asesor del club de música', description: 'El travieso médico escolar que seduce a hombres y mujeres de todas las edades.', image: 'https://i.imgur.com/QEXC2WB.jpeg' },
+
+  // BURAIKAN
+  { id: 'char-28', name: 'Kuzuryu Chisei', group: 'BURAIKAN', role: 'Personal', occupation: 'Presidente', description: 'El original y el mejor, un presidente abrumadoramente irracional.', image: 'https://i.imgur.com/Exq5phR.jpeg' },
+  { id: 'char-29', name: 'Shingu Haruomi', group: 'BURAIKAN', role: 'Personal', occupation: 'Director', description: 'El carismático director que dirige la escuela al lado del presidente.', image: 'https://i.imgur.com/iY8x4Zh.jpeg' }
+];
+
+// CAPÍTULOS DE RESPALDO (INITIAL_CHAPTERS)
+const INITIAL_CHAPTERS: Chapter[] = [
+  {
+    id: "cap-1",
+    number: 1,
+    title: "Capítulo 1",
+    pages: [
+      "https://i.imgur.com/XAS2iVk.jpeg",
+      "https://i.imgur.com/MNnUKjM.jpeg",
+      "https://i.imgur.com/f8c4j3Y.jpeg"
+    ]
+  },
+  {
+    id: "cap-2",
+    number: 2,
+    title: "Capítulo 2",
+    pages: [
+      "https://i.imgur.com/m6xdydz.jpeg",
+      "https://i.imgur.com/qdxNUtl.jpeg",
+      "https://i.imgur.com/muYCLJu.jpeg"
+    ]
+  },
+  {
+    id: "cap-3",
+    number: 3,
+    title: "Capítulo 3",
+    pages: [
+      "https://i.imgur.com/UkUEZgZ.jpeg",
+      "https://i.imgur.com/4B5x9D3.jpeg",
+      "https://i.imgur.com/B8NZCid.jpeg"
+    ]
+  },
+  {
+    id: "cap-4",
+    number: 4,
+    title: "Capítulo 4",
+    pages: [
+      "https://i.imgur.com/GIAOdMn.jpeg",
+      "https://i.imgur.com/eb1XJ1m.jpeg",
+      "https://i.imgur.com/HUSfxHU.jpeg"
+    ]
+  },
+  {
+    id: "cap-5",
+    number: 5,
+    title: "Capítulo 5",
+    pages: [
+      "https://i.imgur.com/eMYK4rf.jpeg",
+      "https://i.imgur.com/mlCE4l2.jpeg",
+      "https://i.imgur.com/53E0xQx.jpeg"
+    ]
+  },
+  {
+    id: "cap-6",
+    number: 6,
+    title: "Capítulo 6",
+    pages: [
+      "https://i.imgur.com/FsxIjzl.jpeg",
+      "https://i.imgur.com/rCAUxk7.jpeg",
+      "https://i.imgur.com/IkehzeN.jpeg"
+    ]
+  },
+  {
+    id: "cap-7",
+    number: 7,
+    title: "Capítulo 7",
+    pages: [
+      "https://i.imgur.com/hqTZC4U.jpeg",
+      "https://i.imgur.com/MclvqJB.jpeg",
+      "https://i.imgur.com/91vl20j.jpeg"
+    ]
+  },
+  {
+    id: "cap-8",
+    number: 8,
+    title: "Capítulo 8",
+    pages: [
+      "https://i.imgur.com/STbr9j4.jpeg",
+      "https://i.imgur.com/rkWqRz1.jpeg",
+      "https://i.imgur.com/tswZG2s.jpeg"
+    ]
+  },
+  {
+    id: "cap-9",
+    number: 9,
+    title: "Capítulo 9",
+    pages: [
+      "https://i.imgur.com/gVLfs6a.jpeg",
+      "https://i.imgur.com/FHeE3jn.jpeg",
+      "https://i.imgur.com/wXboHVj.jpeg"
+    ]
+  },
+  {
+    id: "cap-10",
+    number: 10,
+    title: "Capítulo 10",
+    pages: [
+      "https://i.imgur.com/WzET5Vk.jpeg",
+      "https://i.imgur.com/dNW2FNP.jpeg",
+      "https://i.imgur.com/paV5s6V.jpeg"
+    ]
+  },
+  {
+    id: "cap-11",
+    number: 11,
+    title: "Capítulo 11",
+    pages: [
+      "https://i.imgur.com/8WSFFO2.jpeg",
+      "https://i.imgur.com/wdkRbE6.jpeg",
+      "https://i.imgur.com/3nG4Cgr.jpeg"
+    ]
+  },
+  {
+    id: "cap-12",
+    number: 12,
+    title: "Capítulo 12",
+    pages: [
+      "https://i.imgur.com/HLSyQTe.jpeg",
+      "https://i.imgur.com/tQB9nFt.jpeg",
+      "https://i.imgur.com/dOhFz2J.jpeg"
+    ]
+  },
+  {
+    id: "cap-13",
+    number: 13,
+    title: "Capítulo 13",
+    pages: [
+      "https://i.imgur.com/NRXI5qk.jpeg",
+      "https://i.imgur.com/2JIyzIS.jpeg",
+      "https://i.imgur.com/GJJTjVr.jpeg"
+    ]
+  },
+  {
+    id: "cap-14",
+    number: 14,
+    title: "Capítulo 14",
+    pages: [
+      "https://i.imgur.com/GQ09xoh.jpeg",
+      "https://i.imgur.com/4BXRA9b.jpeg",
+      "https://i.imgur.com/HSDp1Xt.jpeg"
+    ]
+  },
+  {
+    id: "cap-15",
+    number: 15,
+    title: "Capítulo 15",
+    pages: [
+      "https://i.imgur.com/bkXSM8F.jpeg",
+      "https://i.imgur.com/8HLCfd6.jpeg",
+      "https://i.imgur.com/t9xI5JD.jpeg"
+    ]
+  },
+  {
+    id: "cap-16",
+    number: 16,
+    title: "Capítulo 16",
+    pages: [
+      "https://i.imgur.com/ZMKcYkh.jpeg",
+      "https://i.imgur.com/xOclLfS.jpeg",
+      "https://i.imgur.com/nCcNLPJ.jpeg"
+    ]
+  },
+  {
+    id: "cap-17",
+    number: 17,
+    title: "Capítulo 17",
+    pages: [
+      "https://i.imgur.com/LwAKthp.jpeg",
+      "https://i.imgur.com/UP8n6at.jpeg",
+      "https://i.imgur.com/X41npYa.jpeg"
+    ]
+  },
+  {
+    id: "cap-18",
+    number: 18,
+    title: "Capítulo 18",
+    pages: [
+      "https://i.imgur.com/Ld0Hg4X.jpeg",
+      "https://i.imgur.com/fuCJD1Q.jpeg",
+      "https://i.imgur.com/5tUjryh.jpeg"
+    ]
+  }
 ];
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<'manga' | 'characters' | 'admin'>('manga');
-  const [chapters, setChapters] = useState<Chapter[]>([]);
+  const [chapters, setChapters] = useState<Chapter[]>(INITIAL_CHAPTERS);
   const [selectedChapter, setSelectedChapter] = useState<Chapter | null>(null);
   const [selectedGroup, setSelectedGroup] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -88,10 +305,9 @@ export default function App() {
 
   const [notification, setNotification] = useState<string>('');
 
-  // CARGAR DATOS DESDE SUPABASE AL INICIAR
+  // CARGAR DATOS DESDE SUPABASE Y RESPALDO LOCAL AL INICIAR
   useEffect(() => {
     fetchChaptersFromSupabase();
-    fetchCharactersFromSupabase();
 
     const savedStatus = localStorage.getItem('pl_latam_status');
     if (savedStatus) setMangaStatus(savedStatus);
@@ -107,43 +323,25 @@ export default function App() {
       if (error) throw error;
 
       if (data && data.length > 0) {
-        const formattedChapters: Chapter[] = data.map((item: any) => ({
-          id: item.id,
+        const formatted: Chapter[] = data.map((item: any) => ({
+          id: item.id || `cap-${item.number}`,
           number: item.number,
-          title: item.title,
+          title: item.title || `Capítulo ${item.number}`,
           pages: item.pages || []
         }));
-        setChapters(formattedChapters);
+        setChapters(formatted);
+      } else {
+        setChapters(INITIAL_CHAPTERS);
       }
     } catch (err) {
-      console.error('Error al cargar capítulos de Supabase:', err);
-      showNotification('Error al sincronizar con la nube.');
-    }
-  };
-
-  const fetchCharactersFromSupabase = async () => {
-    try {
-      const { data, error } = await supabase.from('characters').select('*');
-      if (error) throw error;
-
-      if (data && data.length > 0) {
-        const formattedChars: Character[] = data.map((item: any) => ({
-          id: item.id,
-          name: item.name,
-          group: item.group,
-          role: item.role,
-          image: item.image,
-          academicLevel: item.academicLevel,
-          club: item.club,
-          council: item.council,
-          occupation: item.occupation,
-          classroom: item.classroom,
-          description: item.description || ''
-        }));
-        setCharacters(formattedChars);
+      console.error('Error al conectar con Supabase, usando respaldo local:', err);
+      // Respaldo local si falla la red
+      const saved = localStorage.getItem('pl_latam_chapters');
+      if (saved) {
+        try { setChapters(JSON.parse(saved)); } catch (e) { setChapters(INITIAL_CHAPTERS); }
+      } else {
+        setChapters(INITIAL_CHAPTERS);
       }
-    } catch (err) {
-      console.error('Error al cargar personajes de Supabase:', err);
     }
   };
 
@@ -169,7 +367,7 @@ export default function App() {
     showNotification(`Estado actualizado a: "${status}"`);
   };
 
-  // GUARDAR CAPÍTULO DIRECTAMENTE EN SUPABASE (GLOBAL PARA TODOS CON UPSERT)
+  // GUARDAR CAPÍTULO GLOBALMENTE EN SUPABASE (CON UPSERT)
   const handleSaveChapter = async (e: React.FormEvent) => {
     e.preventDefault();
     const pages = chapPagesText
@@ -178,7 +376,7 @@ export default function App() {
       .filter((p) => p.length > 0);
 
     const chapterData = {
-      id: `chap-${chapNumber}`,
+      id: `cap-${chapNumber}`,
       number: chapNumber,
       title: chapTitle || `Capítulo ${chapNumber}`,
       pages
@@ -191,13 +389,13 @@ export default function App() {
 
       if (error) throw error;
 
-      showNotification(`¡Capítulo ${chapNumber} guardado en la nube para todos!`);
+      showNotification(`¡Capítulo ${chapNumber} guardado en la nube para todo el mundo!`);
       setChapPagesText('');
       setChapTitle('');
-      fetchChaptersFromSupabase();
+      fetchChaptersFromSupabase(); // Recarga la lista desde Supabase de inmediato
     } catch (err: any) {
       console.error('Error al guardar en Supabase:', err);
-      showNotification(`Error al guardar: ${err.message || 'Revisa la consola'}`);
+      showNotification('Error al guardar en la base de datos.');
     }
   };
 
@@ -217,29 +415,23 @@ export default function App() {
       if (selectedChapter?.number === num) setSelectedChapter(null);
       fetchChaptersFromSupabase();
     } catch (err) {
-      console.error('Error al eliminar capítulo:', err);
-      showNotification('No se pudo eliminar el capítulo.');
+      console.error('Error al eliminar:', err);
+      showNotification('No se pudo eliminar de la base de datos.');
     }
   };
 
-  // ACTUALIZAR FOTO DE PERSONAJE EN SUPABASE
-  const handleUpdateCharacterImage = async (e: React.FormEvent) => {
+  const handleUpdateCharacterImage = (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const { error } = await supabase
-        .from('characters')
-        .update({ image: charImageUrl.trim() })
-        .eq('id', selectedCharId);
-
-      if (error) throw error;
-
-      showNotification('¡Foto de personaje actualizada en la nube!');
-      setCharImageUrl('');
-      fetchCharactersFromSupabase();
-    } catch (err) {
-      console.error('Error al actualizar personaje:', err);
-      showNotification('Error al actualizar la foto.');
-    }
+    const updated = characters.map((c) => {
+      if (c.id === selectedCharId) {
+        return { ...c, image: charImageUrl.trim() };
+      }
+      return c;
+    });
+    setCharacters(updated);
+    localStorage.setItem('pl_latam_characters', JSON.stringify(updated));
+    showNotification('¡Foto de personaje actualizada con éxito!');
+    setCharImageUrl('');
   };
 
   const groups = ['ALL', 'BAE', 'cozmez', 'The Cat\'s Whiskers', 'Akanyatsura', 'Amprule', 'VISTY', '1Nm8', 'Goku Luck', 'BURAIKAN'];
