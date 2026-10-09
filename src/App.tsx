@@ -39,7 +39,7 @@ interface Character {
 
 const ADMIN_PASSWORD = "paradoxlatamadmin";
 
-// PERSONAJES OFICIALES CON FOTOS GLOBALES FIJAS
+// PERSONAJES OFICIALES CON SUS FOTOS CORRECTAS DE IMGUR
 const INITIAL_CHARACTERS: Character[] = [
   // BAE
   { id: 'char-1', name: 'Sugasano Allen', group: 'BAE', role: 'Estudiante', academicLevel: '2do año, curso general, Clase C', club: 'Presidente del club de hip-hop', council: 'N/A', description: 'Un presidente del club de hip-hop que aspira a que el club llegue a la cima una vez que se gradúen.', image: 'https://i.imgur.com/c0rngvV.jpeg' },
@@ -60,41 +60,40 @@ const INITIAL_CHARACTERS: Character[] = [
   { id: 'char-10', name: 'Suiseki Iori', group: 'Akanyatsura', role: 'Profesor', occupation: 'Profesor de matemáticas', classroom: 'Curso general de secundaria, 3er año, clase F', club: 'Asesor del club de baloncesto', description: 'Es un completo demonio de cálculo mental que inculca en las cabezas de sus alumnos un espíritu temerario.', image: 'https://i.imgur.com/TmlS4Q5.jpeg' },
   { id: 'char-11', name: 'Gaho Zen', group: 'Akanyatsura', role: 'Profesor', occupation: 'Profesor de educación física', classroom: 'Curso general de secundaria, 2º año, clase C', club: 'Asesor del club de judo', description: 'Es un gran fanfarrón con los bíceps, y tiene los músculos más voluminosos de la escuela.', image: 'https://i.imgur.com/SDVJOq3.jpeg' },
   { id: 'char-12', name: 'Masaki Hokusai', group: 'Akanyatsura', role: 'Estudiante', academicLevel: '3er año, curso general, Clase D', club: 'Club de tiro con arco', council: 'Departamento de animales', description: 'Es un gigante gentil que prefiere pasar tiempo en el patio con los gatos en lugar de asistir a clases.', image: 'https://i.imgur.com/rJJIj9C.jpeg' },
-  { id: 'char-13', name: 'Maruyama Reo', group: 'Akanyatsura', role: 'Estudiante', academicLevel: '1er año, curso general, Clase E', club: 'Club de música', council: 'N/A', description: 'Un pequeño y astuto demonio que se ganó el apodo de "El Senpai Asesino".', image: 'https://i.imgur.com/rJJIj9C.jpeg' },
-  { id: 'char-14', name: 'Ito Satsuki', group: 'Akanyatsura', role: 'Estudiante', academicLevel: '1er año, curso general, Clase A', club: 'Club de baloncesto', council: 'N/A', description: 'Un delincuente de élite que ha logrado la impresionante hazaña de reprobar absolutamente todas las materias.', image: 'https://i.imgur.com/rJJIj9C.jpeg' },
+  { id: 'char-13', name: 'Maruyama Reo', group: 'Akanyatsura', role: 'Estudiante', academicLevel: '1er año, curso general, Clase E', club: 'Club de música', council: 'N/A', description: 'Un pequeño y astuto demonio que se ganó el apodo de "El Senpai Asesino".', image: 'https://i.imgur.com/MMda3Im.jpeg' },
+  { id: 'char-14', name: 'Ito Satsuki', group: 'Akanyatsura', role: 'Estudiante', academicLevel: '1er año, curso general, Clase A', club: 'Club de baloncesto', council: 'N/A', description: 'Un delincuente de élite que has logrado la impresionante hazaña de reprobar absolutamente todas las materias.', image: 'https://i.imgur.com/S1sMDHB.jpeg' },
 
   // Amprule
-  { id: 'char-15', name: 'Yeon Dongha', group: 'Amprule', role: 'Estudiante', academicLevel: '3er año, curso avanzado', club: 'Club de arte', council: 'Presidente del consejo estudiantil de secundaria', description: 'Este pequeño emperador gobierna con puño de hierro sobre la clase de secundaria.', image: 'https://i.imgur.com/c0rngvV.jpeg' },
-  { id: 'char-16', name: 'Baek Chungsung', group: 'Amprule', role: 'Profesor', occupation: 'Profesor de arte', classroom: 'Curso avanzado de secundaria, segundo año', club: 'Asesor del club de arte', description: 'Este es sin dudas, un profesor masoquista que espera ansiosamente ser castigado por su amo.', image: 'https://i.imgur.com/c0rngvV.jpeg' },
+  { id: 'char-15', name: 'Yeon Dongha', group: 'Amprule', role: 'Estudiante', academicLevel: '3er año, curso avanzado', club: 'Club de arte', council: 'Presidente del consejo estudiantil de secundaria', description: 'Este pequeño emperador gobierna con puño de hierro sobre la clase de secundaria.', image: 'https://i.imgur.com/ysTNgqU.jpeg' },
+  { id: 'char-16', name: 'Baek Chungsung', group: 'Amprule', role: 'Profesor', occupation: 'Profesor de arte', classroom: 'Curso avanzado de secundaria, segundo año', club: 'Asesor del club de arte', description: 'Este es sin dudas, un profesor masoquista que espera ansiosamente ser castigado por su amo.', image: 'https://i.imgur.com/FRQxsWT.jpeg' },
 
   // VISTY
-  { id: 'char-17', name: 'Yamato Shogo', group: 'VISTY', role: 'Estudiante', academicLevel: '2do año, curso general, Clase D', club: 'Presidente del club de astronomía', council: 'N/A', description: 'Un joven serio pero un poco tonto, realmente ama las estrellas y las gomitas.', image: 'https://i.imgur.com/c0rngvV.jpeg' },
-  { id: 'char-18', name: 'Hikage Toma', group: 'VISTY', role: 'Estudiante', academicLevel: '3er año, curso general, Clase F', club: 'Club de música', council: 'Comité ejecutivo del festival cultural', description: 'Un auténtico fiestero con mucho amor para dar, ama la paz y los consejos de belleza.', image: 'https://i.imgur.com/c0rngvV.jpeg' },
-  { id: 'char-19', name: 'Misuji Kantaro', group: 'VISTY', role: 'Estudiante', academicLevel: '1er año, curso general, Clase C', club: 'Club de artesanía', council: 'Comité ejecutivo del festival cultural', description: 'Es un joven con ojos de cachorrito que prioriza verse bien en las redes sociales.', image: 'https://i.imgur.com/c0rngvV.jpeg' },
-  { id: 'char-20', name: 'Kureha Aoi', group: 'VISTY', role: 'Estudiante', academicLevel: '1er año, curso general, Clase A', club: 'Club de teatro, club de jardinería', council: 'N/D', description: 'El príncipe fresco y hermoso del club de teatro.', image: 'https://i.imgur.com/c0rngvV.jpeg' },
+  { id: 'char-17', name: 'Yamato Shogo', group: 'VISTY', role: 'Estudiante', academicLevel: '2do año, curso general, Clase D', club: 'Presidente del club de astronomía', council: 'N/A', description: 'Un joven serio pero un poco tonto, realmente ama las estrellas y las gomitas.', image: 'https://i.imgur.com/wIHHDdY.jpeg' },
+  { id: 'char-18', name: 'Hikage Toma', group: 'VISTY', role: 'Estudiante', academicLevel: '3er año, curso general, Clase F', club: 'Club de música', council: 'Comité ejecutivo del festival cultural', description: 'Un auténtico fiestero con mucho amor para dar, ama la paz y los consejos de belleza.', image: 'https://i.imgur.com/vVq3D6c.jpeg' },
+  { id: 'char-19', name: 'Misuji Kantaro', group: 'VISTY', role: 'Estudiante', academicLevel: '1er año, curso general, Clase C', club: 'Club de artesanía', council: 'Comité ejecutivo del festival cultural', description: 'Es un joven con ojos de cachorrito que prioriza verse bien en las redes sociales.', image: 'https://i.imgur.com/Wm0sJAF.jpeg' },
+  { id: 'char-20', name: 'Kureha Aoi', group: 'VISTY', role: 'Estudiante', academicLevel: '1er año, curso general, Clase A', club: 'Club de teatro, club de jardinería', council: 'N/D', description: 'El príncipe fresco y hermoso del club de teatro.', image: 'https://i.imgur.com/TpB547T.jpeg' },
 
   // 1Nm8
-  { id: 'char-21', name: 'Itsuki', group: '1Nm8', role: 'Estudiante', academicLevel: '2do año, curso avanzado', club: 'Club de ciencias', council: 'Comité de biblioteca', description: 'Un entusiasta de la eficiencia y precisión sin igual.', image: 'https://i.imgur.com/c0rngvV.jpeg' },
-  { id: 'char-22', name: 'Rokuta', group: '1Nm8', role: 'Estudiante', academicLevel: '1er año, curso general, Clase E', club: 'Club de estudios culinarios', council: 'Comité ejecutivo del festival deportivo', description: 'Un niño que parece un cachorro y que infunde miedo en los corazones de los empleados de la tienda de la escuela.', image: 'https://i.imgur.com/c0rngvV.jpeg' },
-  { id: 'char-23', name: 'Miyama Kei', group: '1Nm8', role: 'Estudiante', academicLevel: '3er año, curso avanzado', club: 'No está en ningún club', council: 'Comité de biblioteca', description: 'Un hermoso joven lleno de misterio que pasa mucho tiempo en la enfermería.', image: 'https://i.imgur.com/c0rngvV.jpeg' },
+  { id: 'char-21', name: 'Itsuki', group: '1Nm8', role: 'Estudiante', academicLevel: '2do año, curso avanzado', club: 'Club de ciencias', council: 'Comité de biblioteca', description: 'Un entusiasta de la eficiencia y precisión sin igual.', image: 'https://i.imgur.com/ZVeW5O8.jpeg' },
+  { id: 'char-22', name: 'Rokuta', group: '1Nm8', role: 'Estudiante', academicLevel: '1er año, curso general, Clase E', club: 'Club de estudios culinarios', council: 'Comité ejecutivo del festival deportivo', description: 'Un niño que parece un cachorro y que infunde miedo en los corazones de los empleados de la tienda de la escuela.', image: 'https://i.imgur.com/PKG84GJ.jpeg' },
+  { id: 'char-23', name: 'Miyama Kei', group: '1Nm8', role: 'Estudiante', academicLevel: '3er año, curso avanzado', club: 'No está en ningún club', council: 'Comité de biblioteca', description: 'Un hermoso joven lleno de misterio que pasa mucho tiempo en la enfermería.', image: 'https://i.imgur.com/RarkCZT.jpeg' },
 
   // Goku Luck
-  { id: 'char-24', name: 'Tosa Ryoga', group: 'Goku Luck', role: 'Estudiante', academicLevel: '3er año, curso general, Clase F', club: 'Club de judo', council: 'N/A', description: 'Es como un incontrolable perro rabioso.', image: 'https://i.imgur.com/c0rngvV.jpeg' },
-  { id: 'char-25', name: 'Mikoshiba Kenta', group: 'Goku Luck', role: 'Estudiante', academicLevel: '3er año, curso avanzado', club: 'Club de informática', council: 'N/A', description: 'Un juez, jurado y verdugo del juicio final que te invita a adentrarte aún más en la oscuridad.', image: 'https://i.imgur.com/c0rngvV.jpeg' },
-  { id: 'char-26', name: 'Yuto Inukai', group: 'Goku Luck', role: 'Profesor', occupation: 'Profesor de educación cívica', classroom: 'Curso avanzado de secundaria, tercer año', club: 'Asesor del club de tiro con arco', description: 'Es un líder con experiencia y trabajador que oculta una dualidad secreta.', image: 'https://i.imgur.com/c0rngvV.jpeg' },
-  { id: 'char-27', name: 'Kaida Shion', group: 'Goku Luck', role: 'Personal', occupation: 'Médico escolar', club: 'Asesor del club de música', description: 'El travieso médico escolar que seduce a hombres y mujeres de todas las edades.', image: 'https://i.imgur.com/c0rngvV.jpeg' },
+  { id: 'char-24', name: 'Tosa Ryoga', group: 'Goku Luck', role: 'Estudiante', academicLevel: '3er año, curso general, Clase F', club: 'Club de judo', council: 'N/A', description: 'Es como un incontrolable perro rabioso.', image: 'https://i.imgur.com/fYY5foO.jpeg' },
+  { id: 'char-25', name: 'Mikoshiba Kenta', group: 'Goku Luck', role: 'Estudiante', academicLevel: '3er año, curso avanzado', club: 'Club de informática', council: 'N/A', description: 'Un juez, jurado y verdugo del juicio final que te invita a adentrarte aún más en la oscuridad.', image: 'https://i.imgur.com/ZdsQ7OU.jpeg' },
+  { id: 'char-26', name: 'Yuto Inukai', group: 'Goku Luck', role: 'Profesor', occupation: 'Profesor de educación cívica', classroom: 'Curso avanzado de secundaria, tercer año', club: 'Asesor del club de tiro con arco', description: 'Es un líder con experiencia y trabajador que oculta una dualidad secreta.', image: 'https://i.imgur.com/x8YIWtc.jpeg' },
+  { id: 'char-27', name: 'Kaida Shion', group: 'Goku Luck', role: 'Personal', occupation: 'Médico escolar', club: 'Asesor del club de música', description: 'El travieso médico escolar que seduce a hombres y mujeres de todas las edades.', image: 'https://i.imgur.com/QEXC2WB.jpeg' },
 
   // BURAIKAN
-  { id: 'char-28', name: 'Kuzuryu Chisei', group: 'BURAIKAN', role: 'Personal', occupation: 'Presidente', description: 'El original y el mejor, un presidente abrumadoramente irracional.', image: 'https://i.imgur.com/c0rngvV.jpeg' },
-  { id: 'char-29', name: 'Shingu Haruomi', group: 'BURAIKAN', role: 'Personal', occupation: 'Director', description: 'El carismático director que dirige la escuela al lado del presidente.', image: 'https://i.imgur.com/c0rngvV.jpeg' }
+  { id: 'char-28', name: 'Kuzuryu Chisei', group: 'BURAIKAN', role: 'Personal', occupation: 'Presidente', description: 'El original y el mejor, un presidente abrumadoramente irracional.', image: 'https://i.imgur.com/Exq5phR.jpeg' },
+  { id: 'char-29', name: 'Shingu Haruomi', group: 'BURAIKAN', role: 'Personal', occupation: 'Director', description: 'El carismático director que dirige la escuela al lado del presidente.', image: 'https://i.imgur.com/iY8x4Zh.jpeg' }
 ];
 
-// CAPÍTULOS GLOBALES (Configurados por defecto para que aparezcan las páginas a todo el mundo)
 const INITIAL_CHAPTERS: Chapter[] = Array.from({ length: 17 }, (_, i) => ({
   id: `cap-${i + 1}`,
   number: i + 1,
   title: `Capítulo ${i + 1}`,
-  pages: i === 0 ? ['https://i.imgur.com/c0rngvV.jpeg'] : [] // El capítulo 1 trae una página por defecto, puedes añadir más aquí
+  pages: []
 }));
 
 export default function App() {
@@ -122,7 +121,6 @@ export default function App() {
   const [notification, setNotification] = useState<string>('');
 
   useEffect(() => {
-    // Forzar la lectura combinando datos guardados con los valores globales iniciales por defecto
     const savedChapters = localStorage.getItem('pl_latam_chapters');
     if (savedChapters) {
       try { 
@@ -136,20 +134,9 @@ export default function App() {
     const savedStatus = localStorage.getItem('pl_latam_status');
     if (savedStatus) setMangaStatus(savedStatus);
 
-    const savedChars = localStorage.getItem('pl_latam_characters');
-    if (savedChars) {
-      try { 
-        const parsedChars = JSON.parse(savedChars);
-        // Combinamos para asegurar que si algún personaje nuevo no tiene foto guardada, tome la de INITIAL_CHARACTERS
-        const merged = INITIAL_CHARACTERS.map(ic => {
-          const found = parsedChars.find((pc: Character) => pc.id === ic.id);
-          return found && found.image ? found : ic;
-        });
-        setCharacters(merged);
-      } catch (e) { console.error(e); }
-    } else {
-      localStorage.setItem('pl_latam_characters', JSON.stringify(INITIAL_CHARACTERS));
-    }
+    // Forzamos siempre los personajes con sus imágenes oficiales predeterminadas para evitar datos viejos de localStorage
+    setCharacters(INITIAL_CHARACTERS);
+    localStorage.setItem('pl_latam_characters', JSON.stringify(INITIAL_CHARACTERS));
   }, []);
 
   const showNotification = (msg: string) => {
@@ -504,7 +491,6 @@ export default function App() {
                   </button>
                 </div>
 
-                {/* Estado del Manga */}
                 <div className="mb-6 p-3 rounded-lg bg-slate-950 border border-slate-800">
                   <label className="block text-xs font-bold text-slate-400 mb-2 flex items-center gap-1.5">
                     <Radio size={14} className="text-pink-500" />
@@ -528,7 +514,6 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Asignar Fotos a Personajes */}
                 <div className="mb-6 p-3 rounded-lg bg-slate-950 border border-slate-800">
                   <label className="block text-xs font-bold text-pink-400 mb-2 flex items-center gap-1.5">
                     <Users size={14} />
@@ -607,7 +592,7 @@ export default function App() {
                     type="submit"
                     className="w-full bg-pink-600 hover:bg-pink-500 text-white font-bold py-2.5 rounded-lg transition flex items-center justify-center gap-2 text-sm"
                   >
-                    <Save size={18} />
+                    <Save size5={18} />
                     Guardar / Publicar Capítulo
                   </button>
                 </form>
