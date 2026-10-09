@@ -326,3 +326,231 @@ export default function App() {
                         <ChevronRight size={18} />
                       </button>
                     )}
+                  </div>
+                </div>
+
+                <div className="flex flex-col items-center gap-2 max-w-2xl mx-auto">
+                  {selectedChapter.pages && selectedChapter.pages.length > 0 ? (
+                    selectedChapter.pages.map((imgUrl, idx) => (
+                      <img
+                        key={idx}
+                        src={imgUrl}
+                        alt={`Página ${idx + 1}`}
+                        className="w-full rounded-lg shadow-lg border border-slate-800"
+                      />
+                    ))
+                  ) : (
+                    <div className="text-center py-16 text-slate-500">
+                      <ImageIcon size={48} className="mx-auto mb-2 opacity-40" />
+                      <p>Este capítulo aún no tiene páginas publicadas.</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeTab === 'characters' && (
+          <div>
+            <div className="mb-6 flex flex-col md:flex-row gap-4 items-center justify-between">
+              <div className="relative w-full md:w-64">
+                <Search size={18} className="absolute left-3 top-2.5 text-slate-500" />
+                <input
+                  type="text"
+                  placeholder="Buscar estudiante..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full bg-slate-900 border border-slate-800 rounded-lg pl-9 pr-4 py-2 text-sm text-slate-200 focus:outline-none focus:border-pink-500"
+                />
+              </div>
+
+              <div className="flex flex-wrap gap-1.5 w-full md:w-auto">
+                {groups.map((grp) => (
+                  <button
+                    key={grp}
+                    onClick={() => setSelectedGroup(grp)}
+                    className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition ${selectedGroup === grp ? 'bg-pink-600 text-white' : 'bg-slate-900 border border-slate-800 text-slate-400 hover:text-white'}`}
+                  >
+                    {grp}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {filteredCharacters.map((char, index) => (
+                <div key={index} className="p-4 rounded-xl bg-slate-900 border border-slate-800 flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="text-lg font-bold text-white">{char.name}</h3>
+                      <div className="flex items-center gap-1.5">
+                        <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-pink-950 text-pink-300 border border-pink-800">
+                          {char.group}
+                        </span>
+                        <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-300">
+                          {char.role}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="space-y-1 mb-3 text-xs text-slate-400">
+                      {char.academicLevel && <p><strong className="text-slate-300">Nivel académico:</strong> {char.academicLevel}</p>}
+                      {char.occupation && <p><strong className="text-slate-300">Ocupación:</strong> {char.occupation}</p>}
+                      {char.classroom && <p><strong className="text-slate-300">Aula:</strong> {char.classroom}</p>}
+                      {char.club && <p><strong className="text-slate-300">Club:</strong> {char.club}</p>}
+                      {char.council && <p><strong className="text-slate-300">Consejo estudiantil:</strong> {char.council}</p>}
+                    </div>
+
+                    <p className="text-sm text-slate-300 italic">{char.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'admin' && (
+          <div className="max-w-md mx-auto bg-slate-900 border border-slate-800 rounded-xl p-6">
+            {!isAdminAuthenticated ? (
+              <form onSubmit={handleAdminAuth} className="space-y-4">
+                <div className="text-center mb-4">
+                  <Lock size={36} className="mx-auto text-pink-500 mb-2" />
+                  <h2 className="text-lg font-bold text-white">Acceso Restringido</h2>
+                  <p className="text-xs text-slate-400">Ingresa la clave de administrador para subir o editar capítulos.</p>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-400 mb-1">Contraseña</label>
+                  <div className="relative">
+                    <input
+                      type={showPassword ? 'text' : 'password'}
+                      value={inputPassword}
+                      onChange={(e) => setInputPassword(e.target.value)}
+                      placeholder="Introduce la contraseña"
+                      className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-pink-500 pr-10"
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-3 text-slate-500 hover:text-slate-300"
+                    >
+                      {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
+                  </div>
+                  {passwordError && <p className="text-xs text-red-400 mt-1">{passwordError}</p>}
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full bg-pink-600 hover:bg-pink-500 text-white font-bold py-2.5 rounded-lg transition text-sm"
+                >
+                  Entrar al Panel
+                </button>
+              </form>
+            ) : (
+              <div>
+                <div className="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
+                  <h2 className="text-lg font-bold flex items-center gap-2 text-pink-400">
+                    <Settings size={20} />
+                    Panel de Administración
+                  </h2>
+                  <button
+                    onClick={() => setIsAdminAuthenticated(false)}
+                    className="text-xs bg-slate-800 hover:bg-slate-700 px-2.5 py-1 rounded text-slate-300"
+                  >
+                    Cerrar Sesión
+                  </button>
+                </div>
+
+                <form onSubmit={handleSaveChapter} className="space-y-4">
+                  <div>
+                    <label className="block text-xs font-bold text-slate-400 mb-1">Número de Capítulo</label>
+                    <input
+                      type="number"
+                      min="1"
+                      value={chapNumber}
+                      onChange={(e) => setChapNumber(Number(e.target.value))}
+                      className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-pink-500"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-slate-400 mb-1">Título del Capítulo (Opcional)</label>
+                    <input
+                      type="text"
+                      placeholder="Ej: El comienzo"
+                      value={chapTitle}
+                      onChange={(e) => setChapTitle(e.target.value)}
+                      className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-pink-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-slate-400 mb-1">Subir Fotos desde la Galería</label>
+                    <label className="flex flex-col items-center justify-center p-4 border-2 border-dashed border-slate-700 hover:border-pink-500 rounded-xl cursor-pointer bg-slate-950 transition">
+                      <Upload size={24} className="text-slate-400 mb-1" />
+                      <span className="text-xs font-semibold text-slate-300">Seleccionar fotos de la Galería</span>
+                      <input
+                        type="file"
+                        multiple
+                        accept="image/*"
+                        onChange={handleFileUpload}
+                        className="hidden"
+                      />
+                    </label>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-slate-400 mb-1">
+                      URLs de las Páginas (Una por línea o generadas automáticamente)
+                    </label>
+                    <textarea
+                      rows={4}
+                      value={chapPagesText}
+                      onChange={(e) => setChapPagesText(e.target.value)}
+                      placeholder="Pega las URLs de las imágenes o usa el botón de arriba"
+                      className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-slate-300 focus:outline-none focus:border-pink-500 font-mono"
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="w-full bg-pink-600 hover:bg-pink-500 text-white font-bold py-2.5 rounded-lg transition flex items-center justify-center gap-2 text-sm"
+                  >
+                    <Save size={18} />
+                    Guardar / Publicar Capítulo
+                  </button>
+                </form>
+
+                <hr className="my-6 border-slate-800" />
+
+                <h3 className="text-sm font-bold text-slate-300 mb-3">Gestión de Capítulos</h3>
+                <div className="space-y-2 max-h-48 overflow-y-auto">
+                  {chapters.map((c) => (
+                    <div key={c.id} className="flex items-center justify-between p-2 rounded bg-slate-950 border border-slate-800 text-xs">
+                      <span>Capítulo {c.number} - ({c.pages.length} páginas)</span>
+                      <button
+                        onClick={() => handleDeleteChapter(c.number)}
+                        className="text-red-400 hover:text-red-300 p-1"
+                        title="Eliminar capítulo"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </main>
+
+      <footer className="bg-slate-900 border-t border-slate-800 py-4 text-center text-xs text-slate-500">
+        <p>PARADOX LIVE LATINOAMERICA &copy; Proyecto Fan-made sin fines de lucro.</p>
+      </footer>
+    </div>
+  );
+}
