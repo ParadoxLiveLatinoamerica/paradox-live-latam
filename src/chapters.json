@@ -1,191 +1,164 @@
 [
-  {
-    "id": "cap-1",
-    "number": 1,
-    "title": "Capítulo 1",
-    "pages": [
-      "data:image/jpeg;base64,TU_IMAGEN_1_BASE64",
-      "data:image/jpeg;base64,TU_IMAGEN_2_BASE64",
-      "data:image/jpeg;base64,TU_IMAGEN_3_BASE64",
-      "data:image/jpeg;base64,TU_IMAGEN_4_BASE64"
-    ]
-  },
-  {
-    "id": "cap-2",
-    "number": 2,
-    "title": "Capítulo 2",
-    "pages": [
-      "data:image/jpeg;base64,TU_IMAGEN_1_BASE64",
-      "data:image/jpeg;base64,TU_IMAGEN_2_BASE64",
-      "data:image/jpeg;base64,TU_IMAGEN_3_BASE64"
-    ]
-  },
-  {
-    "id": "cap-3",
-    "number": 3,
-    "title": "Capítulo 3",
-    "pages": [
-      "data:image/jpeg;base64,TU_IMAGEN_1_BASE64",
-      "data:image/jpeg;base64,TU_IMAGEN_2_BASE64",
-      "data:image/jpeg;base64,TU_IMAGEN_3_BASE64",
-      "data:image/jpeg;base64,TU_IMAGEN_4_BASE64"
-    ]
-  },
-  {
-    "id": "cap-4",
-    "number": 4,
-    "title": "Capítulo 4",
-    "pages": [
-      "data:image/jpeg;base64,TU_IMAGEN_1_BASE64",
-      "data:image/jpeg;base64,TU_IMAGEN_2_BASE64",
-      "data:image/jpeg;base64,TU_IMAGEN_3_BASE64"
-    ]
-  },
-  {
-    "id": "cap-5",
-    "number": 5,
-    "title": "Capítulo 5",
-    "pages": [
-      "data:image/jpeg;base64,TU_IMAGEN_1_BASE64",
-      "data:image/jpeg;base64,TU_IMAGEN_2_BASE64",
-      "data:image/jpeg;base64,TU_IMAGEN_3_BASE64",
-      "data:image/jpeg;base64,TU_IMAGEN_4_BASE64"
-    ]
-  },
-  {
-    "id": "cap-6",
-    "number": 6,
-    "title": "Capítulo 6",
-    "pages": [
-      "data:image/jpeg;base64,TU_IMAGEN_1_BASE64",
-      "data:image/jpeg;base64,TU_IMAGEN_2_BASE64",
-      "data:image/jpeg;base64,TU_IMAGEN_3_BASE64"
-    ]
-  },
-  {
-    "id": "cap-7",
-    "number": 7,
-    "title": "Capítulo 7",
-    "pages": [
-      "data:image/jpeg;base64,TU_IMAGEN_1_BASE64",
-      "data:image/jpeg;base64,TU_IMAGEN_2_BASE64",
-      "data:image/jpeg;base64,TU_IMAGEN_3_BASE64",
-      "data:image/jpeg;base64,TU_IMAGEN_4_BASE64"
-    ]
-  },
-  {
-    "id": "cap-8",
-    "number": 8,
-    "title": "Capítulo 8",
-    "pages": [
-      "data:image/jpeg;base64,TU_IMAGEN_1_BASE64",
-      "data:image/jpeg;base64,TU_IMAGEN_2_BASE64",
-      "data:image/jpeg;base64,TU_IMAGEN_3_BASE64"
-    ]
-  },
-  {
-    "id": "cap-9",
-    "number": 9,
-    "title": "Capítulo 9",
-    "pages": [
-      "data:image/jpeg;base64,TU_IMAGEN_1_BASE64",
-      "data:image/jpeg;base64,TU_IMAGEN_2_BASE64",
-      "data:image/jpeg;base64,TU_IMAGEN_3_BASE64",
-      "data:image/jpeg;base64,TU_IMAGEN_4_BASE64"
-    ]
-  },
-  {
-    "id": "cap-10",
-    "number": 10,
-    "title": "Capítulo 10",
-    "pages": [
-      "data:image/jpeg;base64,TU_IMAGEN_1_BASE64",
-      "data:image/jpeg;base64,TU_IMAGEN_2_BASE64",
-      "data:image/jpeg;base64,TU_IMAGEN_3_BASE64"
-    ]
-  },
-  {
-    "id": "cap-11",
-    "number": 11,
-    "title": "Capítulo 11",
-    "pages": [
-      "data:image/jpeg;base64,TU_IMAGEN_1_BASE64",
-      "data:image/jpeg;base64,TU_IMAGEN_2_BASE64",
-      "data:image/jpeg;base64,TU_IMAGEN_3_BASE64",
-      "data:image/jpeg;base64,TU_IMAGEN_4_BASE64"
-    ]
-  },
-  {
-    "id": "cap-12",
-    "number": 12,
-    "title": "Capítulo 12",
-    "pages": [
-      "data:image/jpeg;base64,TU_IMAGEN_1_BASE64",
-      "data:image/jpeg;base64,TU_IMAGEN_2_BASE64",
-      "data:image/jpeg;base64,TU_IMAGEN_3_BASE64"
-    ]
-  },
-  {
-    "id": "cap-13",
-    "number": 13,
-    "title": "Capítulo 13",
-    "pages": [
-      "data:image/jpeg;base64,TU_IMAGEN_1_BASE64",
-      "data:image/jpeg;base64,TU_IMAGEN_2_BASE64",
-      "data:image/jpeg;base64,TU_IMAGEN_3_BASE64",
-      "data:image/jpeg;base64,TU_IMAGEN_4_BASE64"
-    ]
-  },
-  {
-    "id": "cap-14",
-    "number": 14,
-    "title": "Capítulo 14",
-    "pages": [
-      "data:image/jpeg;base64,TU_IMAGEN_1_BASE64",
-      "data:image/jpeg;base64,TU_IMAGEN_2_BASE64",
-      "data:image/jpeg;base64,TU_IMAGEN_3_BASE64"
-    ]
-  },
-  {
-    "id": "cap-15",
-    "number": 15,
-    "title": "Capítulo 15",
-    "pages": [
-      "data:image/jpeg;base64,TU_IMAGEN_1_BASE64",
-      "data:image/jpeg;base64,TU_IMAGEN_2_BASE64",
-      "data:image/jpeg;base64,TU_IMAGEN_3_BASE64",
-      "data:image/jpeg;base64,TU_IMAGEN_4_BASE64"
-    ]
-  },
-  {
-    "id": "cap-16",
-    "number": 16,
-    "title": "Capítulo 16",
-    "pages": [
-      "data:image/jpeg;base64,TU_IMAGEN_1_BASE64",
-      "data:image/jpeg;base64,TU_IMAGEN_2_BASE64",
-      "data:image/jpeg;base64,TU_IMAGEN_3_BASE64"
-    ]
-  },
-  {
-    "id": "cap-17",
-    "number": 17,
-    "title": "Capítulo 17",
-    "pages": [
-      "data:image/jpeg;base64,TU_IMAGEN_1_BASE64",
-      "data:image/jpeg;base64,TU_IMAGEN_2_BASE64",
-      "data:image/jpeg;base64,TU_IMAGEN_3_BASE64",
-      "data:image/jpeg;base64,TU_IMAGEN_4_BASE64"
-    ]
-  },
-  {
-    "id": "cap-18",
-    "number": 18,
-    "title": "Capítulo 18",
-    "pages": [
-      "data:image/jpeg;base64,TU_IMAGEN_1_BASE64",
-      "data:image/jpeg;base64,TU_IMAGEN_2_BASE64",
-      "data:image/jpeg;base64,TU_IMAGEN_3_BASE64"
-    ]
-  }
+{
+"id": "cap-1",
+"chapterNumber": 1,
+"title": "Capítulo 1",
+"coverUrl": "ENLACE_DE_LA_PORTADA_AQUÍ",
+"pages": [
+"https://i.imgur.com/XAS2iVk.jpeg","https://i.imgur.com/MNnUKjM.jpeg","https://i.imgur.com/f8c4j3Y.jpeg"
 ]
+},
+{
+"id": "cap-2",
+"chapterNumber": 2,
+"title": "Capítulo 2",
+"coverUrl": "ENLACE_DE_LA_PORTADA_AQUÍ",
+"pages": [
+"https://i.imgur.com/m6xdydz.jpeg","https://i.imgur.com/qdxNUtl.jpeg","https://i.imgur.com/muYCLJu.jpeg"
+]
+},
+{
+"id": "cap-3",
+"chapterNumber": 3,
+"title": "Capítulo 3",
+"coverUrl": "ENLACE_DE_LA_PORTADA_AQUÍ",
+"pages": [
+"https://i.imgur.com/UkUEZgZ.jpeg","https://i.imgur.com/4B5x9D3.jpeg","https://i.imgur.com/B8NZCid.jpeg"
+]
+},
+{
+"id": "cap-4",
+"chapterNumber": 4,
+"title": "Capítulo 4",
+"coverUrl": "ENLACE_DE_LA_PORTADA_AQUÍ",
+"pages": [
+"https://i.imgur.com/GIAOdMn.jpeg","https://i.imgur.com/eb1XJ1m.jpeg","https://i.imgur.com/HUSfxHU.jpeg"
+]
+},
+{
+"id": "cap-5",
+"chapterNumber": 5,
+"title": "Capítulo 5",
+"coverUrl": "ENLACE_DE_LA_PORTADA_AQUÍ",
+"pages": [
+"https://i.imgur.com/eMYK4rf.jpeg","https://i.imgur.com/mlCE4l2.jpeg","https://i.imgur.com/53E0xQx.jpeg"
+]
+},
+
+{
+"id": "cap-6",
+"chapterNumber": 6,
+"title": "Capítulo 6",
+"coverUrl": "ENLACE_DE_LA_PORTADA_AQUÍ",
+"pages": [
+"https://i.imgur.com/FsxIjzl.jpeg","https://i.imgur.com/rCAUxk7.jpeg","https://i.imgur.com/IkehzeN.jpeg"
+]
+},
+{
+"id": "cap-7",
+"chapterNumber": 7,
+"title": "Capítulo 7",
+"coverUrl": "ENLACE_DE_LA_PORTADA_AQUÍ",
+"pages": [
+"https://i.imgur.com/hqTZC4U.jpeg","https://i.imgur.com/MclvqJB.jpeg","https://i.imgur.com/91vl20j.jpeg"
+]
+},
+{
+"id": "cap-8",
+"chapterNumber": 8,
+"title": "Capítulo 8",
+"coverUrl": "ENLACE_DE_LA_PORTADA_AQUÍ",
+"pages": [
+"https://i.imgur.com/STbr9j4.jpeg","https://i.imgur.com/rkWqRz1.jpeg","https://i.imgur.com/tswZG2s.jpeg"
+]
+},
+{
+"id": "cap-9",
+"chapterNumber": 9,
+"title": "Capítulo 9",
+"coverUrl": "ENLACE_DE_LA_PORTADA_AQUÍ",
+"pages": [
+"https://i.imgur.com/gVLfs6a.jpeg","https://i.imgur.com/FHeE3jn.jpeg","https://i.imgur.com/wXboHVj.jpeg"
+]
+},
+{
+"id": "cap-10",
+"chapterNumber": 10,
+"title": "Capítulo 10",
+"coverUrl": "ENLACE_DE_LA_PORTADA_AQUÍ",
+"pages": [
+"https://i.imgur.com/WzET5Vk.jpeg","https://i.imgur.com/dNW2FNP.jpeg","https://i.imgur.com/paV5s6V.jpeg"
+]
+},
+{
+"id": "cap-11",
+"chapterNumber": 11,
+
+"title": "Capítulo 11",
+"coverUrl": "ENLACE_DE_LA_PORTADA_AQUÍ",
+"pages": [
+"https://i.imgur.com/8WSFFO2.jpeg","https://i.imgur.com/wdkRbE6.jpeg","https://i.imgur.com/3nG4Cgr.jpeg"
+]
+},
+{
+"id": "cap-12",
+"chapterNumber": 12,
+"title": "Capítulo 12",
+"coverUrl": "ENLACE_DE_LA_PORTADA_AQUÍ",
+"pages": [
+"https://i.imgur.com/HLSyQTe.jpeg","https://i.imgur.com/tQB9nFt.jpeg","https://i.imgur.com/dOhFz2J.jpeg"
+]
+},
+{
+"id": "cap-13",
+"chapterNumber": 13,
+"title": "Capítulo 13",
+"coverUrl": "ENLACE_DE_LA_PORTADA_AQUÍ",
+"pages": [
+"https://i.imgur.com/NRXI5qk.jpeg","https://i.imgur.com/2JIyzIS.jpeg","https://i.imgur.com/GJJTjVr.jpeg"
+]
+},
+{
+"id": "cap-14",
+"chapterNumber": 14,
+"title": "Capítulo 14",
+"coverUrl": "ENLACE_DE_LA_PORTADA_AQUÍ",
+"pages": [
+"https://i.imgur.com/GQ09xoh.jpeg","https://i.imgur.com/4BXRA9b.jpeg","https://i.imgur.com/HSDp1Xt.jpeg"
+]
+},
+{
+"id": "cap-15",
+"chapterNumber": 15,
+"title": "Capítulo 15",
+"coverUrl": "ENLACE_DE_LA_PORTADA_AQUÍ",
+"pages": [
+"https://i.imgur.com/bkXSM8F.jpeg","https://i.imgur.com/8HLCfd6.jpeg","https://i.imgur.com/t9xI5JD.jpeg"
+]
+},
+{
+"id": "cap-16",
+"chapterNumber": 16,
+"title": "Capítulo 16",
+"coverUrl": "ENLACE_DE_LA_PORTADA_AQUÍ",
+"pages": [
+
+"https://i.imgur.com/ZMKcYkh.jpeg","https://i.imgur.com/xOclLfS.jpeg","https://i.imgur.com/nCcNLPJ.jpeg"
+]
+},
+{
+"id": "cap-17",
+"chapterNumber": 17,
+"title": "Capítulo 17",
+"coverUrl": "ENLACE_DE_LA_PORTADA_AQUÍ",
+"pages": [
+"https://i.imgur.com/LwAKthp.jpeg","https://i.imgur.com/UP8n6at.jpeg","https://i.imgur.com/X41npYa.jpeg"
+]
+},
+{
+"id": "cap-18",
+"chapterNumber": 18,
+"title": "Capítulo 18",
+"coverUrl": "ENLACE_DE_LA_PORTADA_AQUÍ",
+"pages": [
+"https://i.imgur.com/Ld0Hg4X.jpeg","https://i.imgur.com/fuCJD1Q.jpeg","https://i.imgur.com/5tUjryh.jpeg"
