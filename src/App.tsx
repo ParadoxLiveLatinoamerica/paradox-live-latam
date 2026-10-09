@@ -11,7 +11,8 @@ import {
   Lock,
   Eye,
   EyeOff,
-  Radio
+  Radio,
+  User
 } from 'lucide-react';
 
 interface Chapter {
@@ -25,6 +26,7 @@ interface Character {
   name: string;
   group: string;
   role: string;
+  image?: string;
   academicLevel?: string;
   club?: string;
   council?: string;
@@ -70,7 +72,7 @@ const INITIAL_CHARACTERS: Character[] = [
 
   // 1Nm8
   { name: 'Itsuki', group: '1Nm8', role: 'Estudiante', academicLevel: '2do año, curso avanzado', club: 'Club de ciencias', council: 'Comité de biblioteca', description: 'Un entusiasta de la eficiencia y precisión sin igual.' },
-  { name: 'Rokuta', group: '1Nm8', role: 'Estudiante', academicLevel: '1er año, curso general, Clase E', club: 'Club de estudios culinarios', council: 'Comité ejecutivo del festival deportivo', description: 'Un niño que parece un cachorro y que infunde miedo en los corazones de los empleados de la tienda de la escuela.' },
+  { name: 'Rokuta', group: '1Nm8', role: 'Estudiante', academicLevel: '1er año, curso general, Clase E', club: 'Club de estudios culinarios', council: 'Comité ejecutivo del festival deportivo', description: 'Un niño que parece un cachorro y que infunde miedo en los hearts de los empleados de la tienda de la escuela.' },
   { name: 'Miyama Kei', group: '1Nm8', role: 'Estudiante', academicLevel: '3er año, curso avanzado', club: 'No está en ningún club', council: 'Comité de biblioteca', description: 'Un hermoso joven lleno de misterio que pasa mucho tiempo en la enfermería.' },
 
   // Goku Luck
@@ -374,29 +376,41 @@ export default function App() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {filteredCharacters.map((char, index) => (
-                <div key={index} className="p-4 rounded-xl bg-slate-900 border border-slate-800 flex flex-col justify-between">
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <h3 className="text-lg font-bold text-white">{char.name}</h3>
-                      <div className="flex items-center gap-1.5">
-                        <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-pink-950 text-pink-300 border border-pink-800">
-                          {char.group}
-                        </span>
-                        <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-300">
-                          {char.role}
-                        </span>
+                <div key={index} className="p-4 rounded-xl bg-slate-900 border border-slate-800 flex flex-col sm:flex-row gap-4">
+                  {/* Foto del Personaje */}
+                  <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-lg overflow-hidden bg-slate-950 border border-slate-800 flex-shrink-0 flex items-center justify-center">
+                    {char.image ? (
+                      <img src={char.image} alt={char.name} className="w-full h-full object-cover" />
+                    ) : (
+                      <User size={40} className="text-slate-700" />
+                    )}
+                  </div>
+
+                  {/* Info del Personaje */}
+                  <div className="flex-1 flex flex-col justify-between">
+                    <div>
+                      <div className="flex flex-wrap items-center justify-between gap-1 mb-1">
+                        <h3 className="text-base font-bold text-white">{char.name}</h3>
+                        <div className="flex items-center gap-1">
+                          <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-pink-950 text-pink-300 border border-pink-800">
+                            {char.group}
+                          </span>
+                          <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-300">
+                            {char.role}
+                          </span>
+                        </div>
                       </div>
-                    </div>
 
-                    <div className="space-y-1 mb-3 text-xs text-slate-400">
-                      {char.academicLevel && <p><strong className="text-slate-300">Nivel académico:</strong> {char.academicLevel}</p>}
-                      {char.occupation && <p><strong className="text-slate-300">Ocupación:</strong> {char.occupation}</p>}
-                      {char.classroom && <p><strong className="text-slate-300">Aula:</strong> {char.classroom}</p>}
-                      {char.club && <p><strong className="text-slate-300">Club:</strong> {char.club}</p>}
-                      {char.council && <p><strong className="text-slate-300">Consejo estudiantil:</strong> {char.council}</p>}
-                    </div>
+                      <div className="space-y-0.5 mb-2 text-[11px] text-slate-400">
+                        {char.academicLevel && <p><strong className="text-slate-300">Nivel académico:</strong> {char.academicLevel}</p>}
+                        {char.occupation && <p><strong className="text-slate-300">Ocupación:</strong> {char.occupation}</p>}
+                        {char.classroom && <p><strong className="text-slate-300">Aula:</strong> {char.classroom}</p>}
+                        {char.club && <p><strong className="text-slate-300">Club:</strong> {char.club}</p>}
+                        {char.council && <p><strong className="text-slate-300">Consejo estudiantil:</strong> {char.council}</p>}
+                      </div>
 
-                    <p className="text-sm text-slate-300 italic">{char.description}</p>
+                      <p className="text-xs text-slate-300 italic">{char.description}</p>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -458,7 +472,6 @@ export default function App() {
                   </button>
                 </div>
 
-                {/* Cambiar Estado del Manga */}
                 <div className="mb-6 p-3 rounded-lg bg-slate-950 border border-slate-800">
                   <label className="block text-xs font-bold text-slate-400 mb-2 flex items-center gap-1.5">
                     <Radio size={14} className="text-pink-500" />
@@ -521,9 +534,8 @@ export default function App() {
 
                   <button
                     type="submit"
-                    className="w-full bg-pink-600 hover:bg-pink-500 text-white font-bold py-2.5 rounded-lg transition flex items-center justify-center gap-2 text-sm"
+                    className="w-full bg-pink-600 hover:bg-pink-500 text-white font-bold py-2.5 rounded-lg transition text-sm"
                   >
-                    <Save size={18} />
                     Guardar / Publicar Capítulo
                   </button>
                 </form>
