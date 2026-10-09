@@ -39,24 +39,24 @@ export default function App() {
           <nav className="flex gap-2 bg-slate-950 p-1 rounded-xl border border-slate-800 w-full sm:w-auto">
             <button
               onClick={() => { setActiveTab('manga'); setSelectedChapter(null); setSelectedCharacter(null); }}
-              className={flex-1 sm:flex-none px-6 py-2 rounded-lg font-bold text-sm transition-all duration-200 ${
+              className={`flex-1 sm:flex-none px-6 py-2 rounded-lg font-bold text-sm transition-all duration-200 ${
                 activeTab === 'manga' ? 'bg-gradient-to-r from-fuchsia-500 to-purple-600 text-white shadow-lg' : 'text-slate-400 hover:text-slate-200'
-              }}
+              }`}
             >
               📖 Manga
             </button>
             <button
               onClick={() => { setActiveTab('characters'); setSelectedChapter(null); setSelectedCharacter(null); }}
-              className={flex-1 sm:flex-none px-6 py-2 rounded-lg font-bold text-sm transition-all duration-200 ${
+              className={`flex-1 sm:flex-none px-6 py-2 rounded-lg font-bold text-sm transition-all duration-200 ${
                 activeTab === 'characters' ? 'bg-gradient-to-r from-purple-600 to-indigo-500 text-white shadow-lg' : 'text-slate-400 hover:text-slate-200'
-              }}
+              }`}
             >
               👥 Personajes
             </button>
           </nav>
         </div>
       </header>
-    <main className="max-w-4xl mx-auto px-4 py-8 pb-24">
+      <main className="max-w-4xl mx-auto px-4 py-8 pb-24">
         {activeTab === 'manga' ? (
           !selectedChapter ? (
             <div className="space-y-6">
@@ -82,7 +82,7 @@ export default function App() {
                         {chapter.title}
                       </h3>
                       <p className="text-xs font-semibold mt-1 tracking-wider uppercase text-fuchsia-500/80">
-                        {chapter.pages.length === 0 ? "Próximamente" : Capítulo ${chapter.chapterNumber}}
+                        {chapter.pages.length === 0 ? "Próximamente" : `Capítulo ${chapter.chapterNumber}`}
                       </p>
                     </div>
                   </button>
@@ -103,7 +103,7 @@ export default function App() {
               <div className="flex flex-col items-center gap-4 bg-slate-900/40 p-2 sm:p-4 rounded-3xl border border-slate-900 shadow-2xl max-w-2xl mx-auto">
                 {selectedChapter.pages.map((pageUrl, index) => (
                   <div key={index} className="w-full relative bg-slate-950 rounded-xl overflow-hidden border border-slate-800/50">
-                    <img src={pageUrl} alt={Página ${index + 1}} className="w-full h-auto object-contain block" loading="lazy" />
+                    <img src={pageUrl} alt={`Página ${index + 1}`} className="w-full h-auto object-contain block" loading="lazy" />
                     <div className="absolute bottom-2 right-2 bg-slate-950/80 backdrop-blur text-[10px] font-bold px-2 py-1 rounded-md text-slate-400 border border-slate-800">
                       {index + 1} / {selectedChapter.pages.length}
                     </div>
