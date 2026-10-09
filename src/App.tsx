@@ -8,9 +8,10 @@ import {
   BookOpen, 
   Upload, 
   Save, 
-  CheckCircle2,
   Search,
-  GraduationCap
+  Lock,
+  Eye,
+  EyeOff
 } from 'lucide-react';
 
 interface Chapter {
@@ -31,6 +32,8 @@ interface Character {
   classroom?: string;
   description: string;
 }
+
+const ADMIN_PASSWORD = "paradoxlatamadmin"; // <--- Tu contraseña para entrar a la tuerca
 
 const INITIAL_CHARACTERS: Character[] = [
   // BAE
@@ -88,13 +91,18 @@ export default function App() {
   const [selectedGroup, setSelectedGroup] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState<string>('');
 
+  // Password / Security state
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState<boolean>(false);
+  const [inputPassword, setInputPassword] = useState<string>('');
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [passwordError, setPasswordError] = useState<string>('');
+
   // Form states for Admin
   const [chapNumber, setChapNumber] = useState<number>(1);
   const [chapTitle, setChapTitle] = useState<string>('');
   const [chapPagesText, setChapPagesText] = useState<string>('');
   const [notification, setNotification] = useState<string>('');
 
-  // Load chapters from localStorage on mount
   useEffect(() => {
     const savedChapters = localStorage.getItem('pl_latam_chapters');
     if (savedChapters) {
@@ -105,7 +113,6 @@ export default function App() {
         console.error('Error loading chapters', e);
       }
     } else {
-      // Create empty slots for 17 chapters by default
       const initial: Chapter[] = Array.from({ length: 17 }, (_, i) => ({
         id: `cap-${i + 1}`,
         number: i + 1,
@@ -120,6 +127,17 @@ export default function App() {
   const showNotification = (msg: string) => {
     setNotification(msg);
     setTimeout(() => setNotification(''), 3000);
+  };
+
+  const handleAdminAuth = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (inputPassword === ADMIN_PASSWORD) {
+      setIsAdminAuthenticated(true);
+      setPasswordError('');
+      setInputPassword('');
+    } else {
+      setPasswordError('Contraseña incorrecta. Solo el administrador puede entrar.');
+    }
   };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -222,7 +240,7 @@ export default function App() {
             <button
               onClick={() => setActiveTab('admin')}
               className={`p-2 rounded-lg transition ${activeTab === 'admin' ? 'bg-pink-600 text-white' : 'hover:bg-slate-800 text-slate-400'}`}
-              title="Panel de Control"
+              title="Panel de Administración"
             >
               <Settings size={20} />
             </button>
@@ -405,98 +423,28 @@ export default function App() {
 
         {/* ADMIN TAB */}
         {activeTab === 'admin' && (
-          <div className="max-w-xl mx-auto bg-slate-900 border border-slate-800 rounded-xl p-6">
-            <h2 className="text-xl font-bold mb-4 flex items-center gap-2 text-pink-400">
-              <Settings size={22} />
-              Panel de Administración
-            </h2>
-
-            <form onSubmit={handleSaveChapter} className="space-y-4">
-              <div>
-                <label className="block text-xs font-bold text-slate-400 mb-1">Número de Capítulo</label>
-                <input
-                  type="number"
-                  min="1"
-                  value={chapNumber}
-                  onChange={(e) => setChapNumber(Number(e.target.value))}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-pink-500"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-400 mb-1">Título del Capítulo (Opcional)</label>
-                <input
-                  type="text"
-                  placeholder="Ej: El comienzo"
-                  value={chapTitle}
-                  onChange={(e) => setChapTitle(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-pink-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-400 mb-1">Subir Fotos desde la Galería</label>
-                <label className="flex flex-col items-center justify-center p-4 border-2 border-dashed border-slate-700 hover:border-pink-500 rounded-xl cursor-pointer bg-slate-950 transition">
-                  <Upload size={24} className="text-slate-400 mb-1" />
-                  <span className="text-xs font-semibold text-slate-300">Seleccionar fotos de la Galería</span>
-                  <input
-                    type="file"
-                    multiple
-                    accept="image/*"
-                    onChange={handleFileUpload}
-                    className="hidden"
-                  />
-                </label>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-400 mb-1">
-                  URLs de las Páginas (Una por línea o generadas automáticamente)
-                </label>
-                <textarea
-                  rows={4}
-                  value={chapPagesText}
-                  onChange={(e) => setChapPagesText(e.target.value)}
-                  placeholder="Pega las URLs de las imágenes o usa el botón de arriba"
-                  className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-slate-300 focus:outline-none focus:border-pink-500 font-mono"
-                />
-              </div>
-
-              <button
-                type="submit"
-                className="w-full bg-pink-600 hover:bg-pink-500 text-white font-bold py-2.5 rounded-lg transition flex items-center justify-center gap-2 text-sm"
-              >
-                <Save size={18} />
-                Guardar / Publicar Capítulo
-              </button>
-            </form>
-
-            <hr className="my-6 border-slate-800" />
-
-            <h3 className="text-sm font-bold text-slate-300 mb-3">Gestión de Capítulos</h3>
-            <div className="space-y-2 max-h-48 overflow-y-auto">
-              {chapters.map((c) => (
-                <div key={c.id} className="flex items-center justify-between p-2 rounded bg-slate-950 border border-slate-800 text-xs">
-                  <span>Capítulo {c.number} - ({c.pages.length} páginas)</span>
-                  <button
-                    onClick={() => handleDeleteChapter(c.number)}
-                    className="text-red-400 hover:text-red-300 p-1"
-                    title="Eliminar capítulo"
-                  >
-                    <Trash2 size={16} />
-                  </button>
+          <div className="max-w-md mx-auto bg-slate-900 border border-slate-800 rounded-xl p-6">
+            {!isAdminAuthenticated ? (
+              /* Protected Login Form */
+              <form onSubmit={handleAdminAuth} className="space-y-4">
+                <div className="text-center mb-4">
+                  <Lock size={36} className="mx-auto text-pink-500 mb-2" />
+                  <h2 className="text-lg font-bold text-white">Acceso Restringido</h2>
+                  <p className="text-xs text-slate-400">Ingresa la clave de administrador para subir o editar capítulos.</p>
                 </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </main>
 
-      {/* Footer */}
-      <footer className="bg-slate-900 border-t border-slate-800 py-4 text-center text-xs text-slate-500">
-        <p>PARADOX LIVE LATINOAMERICA &copy; Proyecto Fan-made sin fines de lucro.</p>
-      </footer>
-    </div>
-  );
-}
+                <div>
+                  <label className="block text-xs font-bold text-slate-400 mb-1">Contraseña</label>
+                  <div className="relative">
+                    <input
+                      type={showPassword ? 'text' : 'password'}
+                      value={inputPassword}
+                      onChange={(e) => setInputPassword(e.target.value)}
+                      placeholder="Introduce la contraseña"
+                      className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-pink-500 pr-10"
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-3 text-slate-50
