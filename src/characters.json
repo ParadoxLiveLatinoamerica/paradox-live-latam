@@ -1,4 +1,3 @@
-import charactersData from './characters.json'; // o './data/characters.json'
 {
   "characters": [
     {
