@@ -40,6 +40,7 @@ interface Character {
 
 const ADMIN_PASSWORD = "paradoxlatamadmin";
 
+// 29 PERSONAJES OFICIALES COMPLETOS CON FOTOS GLOBALES FIJAS
 const INITIAL_CHARACTERS: Character[] = [
   // BAE
   { id: 'char-1', name: 'Sugasano Allen', group: 'BAE', role: 'Estudiante', academicLevel: '2do año, curso general, Clase C', club: 'Presidente del club de hip-hop', council: 'N/A', description: 'Un presidente del club de hip-hop que aspira a que el club llegue a la cima una vez que se gradúen.', image: 'https://i.imgur.com/c0rngvV.jpeg' },
@@ -89,9 +90,25 @@ const INITIAL_CHARACTERS: Character[] = [
   { id: 'char-29', name: 'Shingu Haruomi', group: 'BURAIKAN', role: 'Personal', occupation: 'Director', description: 'El carismático director que dirige la escuela al lado del presidente.', image: 'https://i.imgur.com/c0rngvV.jpeg' }
 ];
 
+// CAPÍTULOS GLOBALES INICIALES (Aquí puedes agregar tus páginas de Imgur para que todos las vean)
+const INITIAL_CHAPTERS: Chapter[] = [
+  { 
+    id: 'cap-1', 
+    number: 1, 
+    title: 'Capítulo 1', 
+    pages: ['https://i.imgur.com/c0rngvV.jpeg'] 
+  },
+  { 
+    id: 'cap-2', 
+    number: 2, 
+    title: 'Capítulo 2', 
+    pages: [] 
+  }
+];
+
 export default function App() {
   const [activeTab, setActiveTab] = useState<'manga' | 'characters' | 'admin'>('manga');
-  const [chapters, setChapters] = useState<Chapter[]>([]);
+  const [chapters, setChapters] = useState<Chapter[]>(INITIAL_CHAPTERS);
   const [selectedChapter, setSelectedChapter] = useState<Chapter | null>(null);
   const [selectedGroup, setSelectedGroup] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -114,15 +131,13 @@ export default function App() {
   const [notification, setNotification] = useState<string>('');
 
   useEffect(() => {
+    // Forzar la sincronización global leyendo y asegurando respaldo
     const savedChapters = localStorage.getItem('pl_latam_chapters');
     if (savedChapters) {
       try { setChapters(JSON.parse(savedChapters)); } catch (e) { console.error(e); }
     } else {
-      const initial: Chapter[] = [
-        { id: 'cap-1', number: 1, title: 'Capítulo 1', pages: ['https://i.imgur.com/c0rngvV.jpeg'] }
-      ];
-      setChapters(initial);
-      localStorage.setItem('pl_latam_chapters', JSON.stringify(initial));
+      setChapters(INITIAL_CHAPTERS);
+      localStorage.setItem('pl_latam_chapters', JSON.stringify(INITIAL_CHAPTERS));
     }
 
     const savedStatus = localStorage.getItem('pl_latam_status');
@@ -610,7 +625,7 @@ export default function App() {
                         className="text-red-400 hover:text-red-300 p-1"
                         title="Eliminar capítulo"
                       >
-                        <Trash2 size5={16} />
+                        <Trash2 size={16} />
                       </button>
                     </div>
                   ))}
