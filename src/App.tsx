@@ -61,7 +61,7 @@ const INITIAL_CHARACTERS: Character[] = [
   { id: 'char-11', name: 'Gaho Zen', group: 'Akanyatsura', role: 'Profesor', occupation: 'Profesor de educación física', classroom: 'Curso general de secundaria, 2º año, clase C', club: 'Asesor del club de judo', description: 'Es un gran fanfarrón con los bíceps, y tiene los músculos más voluminosos de la escuela.', image: 'https://i.imgur.com/SDVJOq3.jpeg' },
   { id: 'char-12', name: 'Masaki Hokusai', group: 'Akanyatsura', role: 'Estudiante', academicLevel: '3er año, curso general, Clase D', club: 'Club de tiro con arco', council: 'Departamento de animales', description: 'Es un gigante gentil que prefiere pasar tiempo en el patio con los gatos en lugar de asistir a clases.', image: 'https://i.imgur.com/rJJIj9C.jpeg' },
   { id: 'char-13', name: 'Maruyama Reo', group: 'Akanyatsura', role: 'Estudiante', academicLevel: '1er año, curso general, Clase E', club: 'Club de música', council: 'N/A', description: 'Un pequeño y astuto demonio que se ganó el apodo de "El Senpai Asesino".', image: 'https://i.imgur.com/MMda3Im.jpeg' },
-  { id: 'char-14', name: 'Ito Satsuki', group: 'Akanyatsura', role: 'Estudiante', academicLevel: '1er año, curso general, Clase A', club: 'Club de baloncesto', council: 'N/A', description: 'Un delincuente de élite que has logrado la impresionante hazaña de reprobar absolutamente todas las materias.', image: 'https://i.imgur.com/S1sMDHB.jpeg' },
+  { id: 'char-14', name: 'Ito Satsuki', group: 'Akanyatsura', role: 'Estudiante', academicLevel: '1er año, curso general, Clase A', club: 'Club de baloncesto', council: 'N/A', description: 'Un delincuente de élite que ha logrado la impresionante hazaña de reprobar absolutamente todas las materias.', image: 'https://i.imgur.com/S1sMDHB.jpeg' },
 
   // Amprule
   { id: 'char-15', name: 'Yeon Dongha', group: 'Amprule', role: 'Estudiante', academicLevel: '3er año, curso avanzado', club: 'Club de arte', council: 'Presidente del consejo estudiantil de secundaria', description: 'Este pequeño emperador gobierna con puño de hierro sobre la clase de secundaria.', image: 'https://i.imgur.com/ysTNgqU.jpeg' },
@@ -89,11 +89,12 @@ const INITIAL_CHARACTERS: Character[] = [
   { id: 'char-29', name: 'Shingu Haruomi', group: 'BURAIKAN', role: 'Personal', occupation: 'Director', description: 'El carismático director que dirige la escuela al lado del presidente.', image: 'https://i.imgur.com/iY8x4Zh.jpeg' }
 ];
 
-const INITIAL_CHAPTERS: Chapter[] = Array.from({ length: 17 }, (_, i) => ({
+// CREAMOS LOS 18 CAPÍTULOS INICIALES (PUEDES AGREGAR LOS LINKS DE SUS PÁGINAS AQUÍ O DESDE EL PANEL)
+const INITIAL_CHAPTERS: Chapter[] = Array.from({ length: 18 }, (_, i) => ({
   id: `cap-${i + 1}`,
   number: i + 1,
   title: `Capítulo ${i + 1}`,
-  pages: []
+  pages: [] 
 }));
 
 export default function App() {
@@ -125,7 +126,10 @@ export default function App() {
     if (savedChapters) {
       try { 
         const parsed = JSON.parse(savedChapters);
-        if (parsed && parsed.length > 0) setChapters(parsed);
+        if (parsed && parsed.length > 0) {
+          // Aseguramos que existan siempre los 18 capítulos
+          setChapters(parsed);
+        }
       } catch (e) { console.error(e); }
     } else {
       localStorage.setItem('pl_latam_chapters', JSON.stringify(INITIAL_CHAPTERS));
@@ -134,7 +138,6 @@ export default function App() {
     const savedStatus = localStorage.getItem('pl_latam_status');
     if (savedStatus) setMangaStatus(savedStatus);
 
-    // Forzamos siempre los personajes con sus imágenes oficiales predeterminadas para evitar datos viejos de localStorage
     setCharacters(INITIAL_CHARACTERS);
     localStorage.setItem('pl_latam_characters', JSON.stringify(INITIAL_CHARACTERS));
   }, []);
@@ -187,16 +190,16 @@ export default function App() {
 
     setChapters(updated);
     localStorage.setItem('pl_latam_chapters', JSON.stringify(updated));
-    showNotification(`¡Capítulo ${chapNumber} guardado!`);
+    showNotification(`¡Capítulo ${chapNumber} guardado correctamente!`);
     setChapPagesText('');
     setChapTitle('');
   };
 
   const handleDeleteChapter = (num: number) => {
-    const updated = chapters.filter((c) => c.number !== num);
+    const updated = chapters.map(c => c.number === num ? { ...c, pages: [] } : c);
     setChapters(updated);
     localStorage.setItem('pl_latam_chapters', JSON.stringify(updated));
-    showNotification(`Capítulo ${num} eliminado.`);
+    showNotification(`Páginas del Capítulo ${num} eliminadas.`);
     if (selectedChapter?.number === num) setSelectedChapter(null);
   };
 
@@ -282,7 +285,7 @@ export default function App() {
 
                 <h2 className="text-lg font-bold mb-3 flex items-center gap-2">
                   <BookOpen size={20} className="text-pink-500" />
-                  Lista de Capítulos
+                  Lista de Capítulos (1 al 18)
                 </h2>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
@@ -297,7 +300,7 @@ export default function App() {
                           Capítulo {chap.number}
                         </span>
                         <p className="text-xs text-slate-500 mt-0.5">
-                          {chap.pages.length > 0 ? `${chap.pages.length} páginas` : 'Próximamente'}
+                          {chap.pages && chap.pages.length > 0 ? `${chap.pages.length} páginas` : 'Próximamente'}
                         </p>
                       </div>
                       <ChevronRight size={18} className="text-slate-600 group-hover:text-pink-400 transition" />
@@ -553,10 +556,11 @@ export default function App() {
 
                 <form onSubmit={handleSaveChapter} className="space-y-4">
                   <div>
-                    <label className="block text-xs font-bold text-slate-400 mb-1">Número de Capítulo</label>
+                    <label className="block text-xs font-bold text-slate-400 mb-1">Número de Capítulo (1 al 18)</label>
                     <input
                       type="number"
                       min="1"
+                      max="18"
                       value={chapNumber}
                       onChange={(e) => setChapNumber(Number(e.target.value))}
                       className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-pink-500"
@@ -592,7 +596,7 @@ export default function App() {
                     type="submit"
                     className="w-full bg-pink-600 hover:bg-pink-500 text-white font-bold py-2.5 rounded-lg transition flex items-center justify-center gap-2 text-sm"
                   >
-                    <Save size5={18} />
+                    <Save size={18} />
                     Guardar / Publicar Capítulo
                   </button>
                 </form>
@@ -603,11 +607,11 @@ export default function App() {
                 <div className="space-y-2 max-h-48 overflow-y-auto">
                   {chapters.map((c) => (
                     <div key={c.id} className="flex items-center justify-between p-2 rounded bg-slate-950 border border-slate-800 text-xs">
-                      <span>Capítulo {c.number} - ({c.pages.length} páginas)</span>
+                      <span>Capítulo {c.number} - ({c.pages ? c.pages.length : 0} páginas)</span>
                       <button
                         onClick={() => handleDeleteChapter(c.number)}
                         className="text-red-400 hover:text-red-300 p-1"
-                        title="Eliminar capítulo"
+                        title="Vaciar capítulo"
                       >
                         <Trash2 size={16} />
                       </button>
