@@ -75,11 +75,9 @@ export default function App() {
 
   const [notification, setNotification] = useState<string>('');
 
-  // Cargar datos de Supabase para todos los visitantes en tiempo real
   useEffect(() => {
     async function fetchDataFromSupabase() {
       try {
-        // 1. Cargar Capítulos
         const { data: chapData, error: chapError } = await supabase
           .from('chapters')
           .select('*');
@@ -94,13 +92,11 @@ export default function App() {
           setChapters(DEFAULT_18_CHAPTERS);
         }
 
-        // 2. Cargar Personajes desde tu base de datos
         const { data: charData, error: charError } = await supabase
           .from('characters')
           .select('*');
 
         if (!charError && charData && charData.length > 0) {
-          // Mapeamos los campos de la BD asegurando el formato correcto
           const formattedChars = charData.map((c: any) => ({
             id: c.id,
             name: c.name,
@@ -120,7 +116,6 @@ export default function App() {
           }
         }
 
-        // 3. Cargar Estado del Manga
         const { data: statusData } = await supabase
           .from('settings')
           .select('*')
@@ -180,7 +175,6 @@ export default function App() {
     };
 
     try {
-      // Guardar en Supabase usando el número como referencia única
       const { error } = await supabase
         .from('chapters')
         .upsert(updatedChapterData, { onConflict: 'number' });
