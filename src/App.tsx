@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
   Settings, 
   Image as ImageIcon, 
@@ -40,8 +40,8 @@ interface Character {
 
 const ADMIN_PASSWORD = "paradoxlatamadmin";
 
-// 29 PERSONAJES OFICIALES COMPLETOS CON FOTOS GLOBALES FIJAS
-const INITIAL_CHARACTERS: Character[] = [
+// 29 PERSONAJES GLOBALES OFICIALES (Visibles idénticos para todo el mundo)
+const GLOBAL_CHARACTERS: Character[] = [
   // BAE
   { id: 'char-1', name: 'Sugasano Allen', group: 'BAE', role: 'Estudiante', academicLevel: '2do año, curso general, Clase C', club: 'Presidente del club de hip-hop', council: 'N/A', description: 'Un presidente del club de hip-hop que aspira a que el club llegue a la cima una vez que se gradúen.', image: 'https://i.imgur.com/c0rngvV.jpeg' },
   { id: 'char-2', name: 'Yeon Hajun', group: 'BAE', role: 'Estudiante', academicLevel: '2do año, curso avanzado', club: 'Club de tenis', council: 'Presidente del consejo estudiantil', description: 'El noble sonriente que dirige la escuela como si fuera su propio castillo.', image: 'https://i.imgur.com/GqXpiP8.jpeg' },
@@ -90,72 +90,46 @@ const INITIAL_CHARACTERS: Character[] = [
   { id: 'char-29', name: 'Shingu Haruomi', group: 'BURAIKAN', role: 'Personal', occupation: 'Director', description: 'El carismático director que dirige la escuela al lado del presidente.', image: 'https://i.imgur.com/c0rngvV.jpeg' }
 ];
 
-// CAPÍTULOS GLOBALES INICIALES (Aquí puedes agregar tus páginas de Imgur para que todos las vean)
-const INITIAL_CHAPTERS: Chapter[] = [
-  { 
-    id: 'cap-1', 
-    number: 1, 
-    title: 'Capítulo 1', 
-    pages: ['https://i.imgur.com/c0rngvV.jpeg'] 
+// CAPÍTULOS GLOBALES FIJOS: Agrega aquí los enlaces de Imgur de tus capítulos para que todos los vean
+const GLOBAL_CHAPTERS: Chapter[] = [
+  {
+    id: 'cap-1',
+    number: 1,
+    title: 'Capítulo 1',
+    pages: [
+      'https://i.imgur.com/c0rngvV.jpeg' // Puedes agregar más links de imágenes aquí separados por comas
+    ]
   },
-  { 
-    id: 'cap-2', 
-    number: 2, 
-    title: 'Capítulo 2', 
-    pages: [] 
+  {
+    id: 'cap-2',
+    number: 2,
+    title: 'Capítulo 2',
+    pages: [
+      // 'https://i.imgur.com/tu-imagen-cap2.jpeg'
+    ]
   }
 ];
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<'manga' | 'characters' | 'admin'>('manga');
-  const [chapters, setChapters] = useState<Chapter[]>(INITIAL_CHAPTERS);
   const [selectedChapter, setSelectedChapter] = useState<Chapter | null>(null);
   const [selectedGroup, setSelectedGroup] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   const [mangaStatus, setMangaStatus] = useState<string>('En emisión');
-  const [characters, setCharacters] = useState<Character[]>(INITIAL_CHARACTERS);
-
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState<boolean>(false);
   const [inputPassword, setInputPassword] = useState<string>('');
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [passwordError, setPasswordError] = useState<string>('');
 
-  const [chapNumber, setChapNumber] = useState<number>(1);
-  const [chapTitle, setChapTitle] = useState<string>('');
-  const [chapPagesText, setChapPagesText] = useState<string>('');
-  
-  const [selectedCharId, setSelectedCharId] = useState<string>(INITIAL_CHARACTERS[0].id);
-  const [charImageUrl, setCharImageUrl] = useState<string>('');
+  const groups = ['ALL', 'BAE', 'cozmez', 'The Cat\'s Whiskers', 'Akanyatsura', 'Amprule', 'VISTY', '1Nm8', 'Goku Luck', 'BURAIKAN'];
 
-  const [notification, setNotification] = useState<string>('');
-
-  useEffect(() => {
-    // Forzar la sincronización global leyendo y asegurando respaldo
-    const savedChapters = localStorage.getItem('pl_latam_chapters');
-    if (savedChapters) {
-      try { setChapters(JSON.parse(savedChapters)); } catch (e) { console.error(e); }
-    } else {
-      setChapters(INITIAL_CHAPTERS);
-      localStorage.setItem('pl_latam_chapters', JSON.stringify(INITIAL_CHAPTERS));
-    }
-
-    const savedStatus = localStorage.getItem('pl_latam_status');
-    if (savedStatus) setMangaStatus(savedStatus);
-
-    const savedChars = localStorage.getItem('pl_latam_characters');
-    if (savedChars) {
-      try { setCharacters(JSON.parse(savedChars)); } catch (e) { console.error(e); }
-    } else {
-      setCharacters(INITIAL_CHARACTERS);
-      localStorage.setItem('pl_latam_characters', JSON.stringify(INITIAL_CHARACTERS));
-    }
-  }, []);
-
-  const showNotification = (msg: string) => {
-    setNotification(msg);
-    setTimeout(() => setNotification(''), 3000);
-  };
+  const filteredCharacters = GLOBAL_CHARACTERS.filter((c) => {
+    const matchesGroup = selectedGroup === 'ALL' || c.group === selectedGroup;
+    const matchesSearch = c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      c.description.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesGroup && matchesSearch;
+  });
 
   const handleAdminAuth = (e: React.FormEvent) => {
     e.preventDefault();
@@ -167,74 +141,6 @@ export default function App() {
       setPasswordError('Contraseña incorrecta.');
     }
   };
-
-  const handleChangeStatus = (status: string) => {
-    setMangaStatus(status);
-    localStorage.setItem('pl_latam_status', status);
-    showNotification(`Estado actualizado a: "${status}"`);
-  };
-
-  const handleSaveChapter = (e: React.FormEvent) => {
-    e.preventDefault();
-    const pages = chapPagesText
-      .split('\n')
-      .map((p) => p.trim())
-      .filter((p) => p.length > 0);
-
-    const newChapter: Chapter = {
-      id: `cap-${chapNumber}`,
-      number: chapNumber,
-      title: chapTitle || `Capítulo ${chapNumber}`,
-      pages
-    };
-
-    const updated = [...chapters];
-    const index = updated.findIndex((c) => c.number === chapNumber);
-
-    if (index >= 0) {
-      updated[index] = newChapter;
-    } else {
-      updated.push(newChapter);
-      updated.sort((a, b) => a.number - b.number);
-    }
-
-    setChapters(updated);
-    localStorage.setItem('pl_latam_chapters', JSON.stringify(updated));
-    showNotification(`¡Capítulo ${chapNumber} guardado con éxito!`);
-    setChapPagesText('');
-    setChapTitle('');
-  };
-
-  const handleDeleteChapter = (num: number) => {
-    const updated = chapters.filter((c) => c.number !== num);
-    setChapters(updated);
-    localStorage.setItem('pl_latam_chapters', JSON.stringify(updated));
-    showNotification(`Capítulo ${num} eliminado.`);
-    if (selectedChapter?.number === num) setSelectedChapter(null);
-  };
-
-  const handleUpdateCharacterImage = (e: React.FormEvent) => {
-    e.preventDefault();
-    const updated = characters.map((c) => {
-      if (c.id === selectedCharId) {
-        return { ...c, image: charImageUrl.trim() };
-      }
-      return c;
-    });
-    setCharacters(updated);
-    localStorage.setItem('pl_latam_characters', JSON.stringify(updated));
-    showNotification('¡Foto de personaje actualizada con éxito!');
-    setCharImageUrl('');
-  };
-
-  const groups = ['ALL', 'BAE', 'cozmez', 'The Cat\'s Whiskers', 'Akanyatsura', 'Amprule', 'VISTY', '1Nm8', 'Goku Luck', 'BURAIKAN'];
-
-  const filteredCharacters = characters.filter((c) => {
-    const matchesGroup = selectedGroup === 'ALL' || c.group === selectedGroup;
-    const matchesSearch = c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      c.description.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesGroup && matchesSearch;
-  });
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">
@@ -256,7 +162,7 @@ export default function App() {
               onClick={() => { setActiveTab('characters'); setSelectedChapter(null); }}
               className={`px-3 py-1.5 rounded-lg text-sm font-semibold transition ${activeTab === 'characters' ? 'bg-pink-600 text-white' : 'hover:bg-slate-800 text-slate-300'}`}
             >
-              Estudiantes ({characters.length})
+              Estudiantes ({GLOBAL_CHARACTERS.length})
             </button>
             <button
               onClick={() => { setActiveTab('admin'); setSelectedChapter(null); }}
@@ -268,12 +174,6 @@ export default function App() {
           </div>
         </div>
       </header>
-
-      {notification && (
-        <div className="bg-pink-600 text-white text-center py-2 px-4 text-sm font-bold animate-pulse">
-          {notification}
-        </div>
-      )}
 
       <main className="flex-1 max-w-5xl w-full mx-auto px-4 py-6">
         {activeTab === 'manga' && (
@@ -300,7 +200,7 @@ export default function App() {
                 </h2>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                  {chapters.map((chap) => (
+                  {GLOBAL_CHAPTERS.map((chap) => (
                     <div
                       key={chap.id}
                       onClick={() => setSelectedChapter(chap)}
@@ -336,7 +236,7 @@ export default function App() {
                     {selectedChapter.number > 1 && (
                       <button
                         onClick={() => {
-                          const prev = chapters.find((c) => c.number === selectedChapter.number - 1);
+                          const prev = GLOBAL_CHAPTERS.find((c) => c.number === selectedChapter.number - 1);
                           if (prev) setSelectedChapter(prev);
                         }}
                         className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300"
@@ -345,10 +245,10 @@ export default function App() {
                         <ChevronLeft size={18} />
                       </button>
                     )}
-                    {selectedChapter.number < chapters.length && (
+                    {selectedChapter.number < GLOBAL_CHAPTERS.length && (
                       <button
                         onClick={() => {
-                          const next = chapters.find((c) => c.number === selectedChapter.number + 1);
+                          const next = GLOBAL_CHAPTERS.find((c) => c.number === selectedChapter.number + 1);
                           if (next) setSelectedChapter(next);
                         }}
                         className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300"
@@ -458,7 +358,7 @@ export default function App() {
                 <div className="text-center mb-4">
                   <Lock size={36} className="mx-auto text-pink-500 mb-2" />
                   <h2 className="text-lg font-bold text-white">Panel de Administración</h2>
-                  <p className="text-xs text-slate-400">Ingresa la contraseña para agregar capítulos y fotos.</p>
+                  <p className="text-xs text-slate-400">Ingresa la contraseña para verificar configuraciones.</p>
                 </div>
 
                 <div>
@@ -491,11 +391,11 @@ export default function App() {
                 </button>
               </form>
             ) : (
-              <div>
+              <div className="space-y-4">
                 <div className="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
                   <h2 className="text-lg font-bold flex items-center gap-2 text-pink-400">
                     <Settings size={20} />
-                    Panel de Control
+                    Panel de Control Global
                   </h2>
                   <button
                     onClick={() => setIsAdminAuthenticated(false)}
@@ -504,131 +404,9 @@ export default function App() {
                     Cerrar Sesión
                   </button>
                 </div>
-
-                {/* Estado del Manga */}
-                <div className="mb-6 p-3 rounded-lg bg-slate-950 border border-slate-800">
-                  <label className="block text-xs font-bold text-slate-400 mb-2 flex items-center gap-1.5">
-                    <Radio size={14} className="text-pink-500" />
-                    Estado de Publicación del Manga
-                  </label>
-                  <div className="grid grid-cols-2 gap-2">
-                    <button
-                      type="button"
-                      onClick={() => handleChangeStatus('En emisión')}
-                      className={`py-2 rounded-lg text-xs font-bold transition ${mangaStatus === 'En emisión' ? 'bg-emerald-600 text-white shadow' : 'bg-slate-900 border border-slate-800 text-slate-400 hover:text-white'}`}
-                    >
-                      🟢 En emisión
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleChangeStatus('Finalizado')}
-                      className={`py-2 rounded-lg text-xs font-bold transition ${mangaStatus === 'Finalizado' ? 'bg-slate-700 text-white shadow' : 'bg-slate-900 border border-slate-800 text-slate-400 hover:text-white'}`}
-                    >
-                      🏁 Finalizado
-                    </button>
-                  </div>
-                </div>
-
-                {/* Asignar Fotos a Personajes */}
-                <div className="mb-6 p-3 rounded-lg bg-slate-950 border border-slate-800">
-                  <label className="block text-xs font-bold text-pink-400 mb-2 flex items-center gap-1.5">
-                    <User size={14} />
-                    Asignar Foto a Estudiante / Profesor
-                  </label>
-                  <form onSubmit={handleUpdateCharacterImage} className="space-y-3">
-                    <div>
-                      <select
-                        value={selectedCharId}
-                        onChange={(e) => setSelectedCharId(e.target.value)}
-                        className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-pink-500"
-                      >
-                        {characters.map((c) => (
-                          <option key={c.id} value={c.id}>{c.name} ({c.group})</option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div>
-                      <input
-                        type="text"
-                        placeholder="Pega aquí el enlace de Imgur (ej: https://i.imgur.com/...)"
-                        value={charImageUrl}
-                        onChange={(e) => setCharImageUrl(e.target.value)}
-                        className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-pink-500"
-                      />
-                    </div>
-
-                    <button
-                      type="submit"
-                      className="w-full bg-slate-800 hover:bg-slate-700 text-pink-300 font-bold py-1.5 rounded-lg transition text-xs border border-slate-700"
-                    >
-                      Actualizar Foto del Personaje
-                    </button>
-                  </form>
-                </div>
-
-                <form onSubmit={handleSaveChapter} className="space-y-4">
-                  <div>
-                    <label className="block text-xs font-bold text-slate-400 mb-1">Número de Capítulo</label>
-                    <input
-                      type="number"
-                      min="1"
-                      value={chapNumber}
-                      onChange={(e) => setChapNumber(Number(e.target.value))}
-                      className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-pink-500"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-slate-400 mb-1">Título del Capítulo (Opcional)</label>
-                    <input
-                      type="text"
-                      placeholder="Ej: El comienzo"
-                      value={chapTitle}
-                      onChange={(e) => setChapTitle(e.target.value)}
-                      className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-pink-500"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-slate-400 mb-1">
-                      Enlaces Directos de Imgur (Uno por línea)
-                    </label>
-                    <textarea
-                      rows={5}
-                      value={chapPagesText}
-                      onChange={(e) => setChapPagesText(e.target.value)}
-                      placeholder="Ejemplo:&#10;https://i.imgur.com/foto1.jpg&#10;https://i.imgur.com/foto2.jpg"
-                      className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-slate-300 focus:outline-none focus:border-pink-500 font-mono"
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="w-full bg-pink-600 hover:bg-pink-500 text-white font-bold py-2.5 rounded-lg transition flex items-center justify-center gap-2 text-sm shadow-lg shadow-pink-600/30"
-                  >
-                    <Save size={18} />
-                    Guardar / Publicar Capítulo
-                  </button>
-                </form>
-
-                <hr className="my-6 border-slate-800" />
-
-                <h3 className="text-sm font-bold text-slate-300 mb-3">Gestión de Capítulos</h3>
-                <div className="space-y-2 max-h-48 overflow-y-auto">
-                  {chapters.map((c) => (
-                    <div key={c.id} className="flex items-center justify-between p-2 rounded bg-slate-950 border border-slate-800 text-xs">
-                      <span>Capítulo {c.number} - ({c.pages.length} páginas)</span>
-                      <button
-                        onClick={() => handleDeleteChapter(c.number)}
-                        className="text-red-400 hover:text-red-300 p-1"
-                        title="Eliminar capítulo"
-                      >
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
-                  ))}
+                <div className="p-4 rounded-lg bg-slate-950 border border-slate-800 text-xs space-y-2 text-slate-300">
+                  <p className="font-bold text-pink-400">¡Modo Global Activo!</p>
+                  <p>Para que los capítulos y las fotos se sincronicen automáticamente para todos los visitantes en Vercel, agrégalos directamente en el código del archivo <code className="text-purple-300">src/App.tsx</code> dentro de <code className="text-purple-300">GLOBAL_CHAPTERS</code> y haz commit en GitHub.</p>
                 </div>
               </div>
             )}
