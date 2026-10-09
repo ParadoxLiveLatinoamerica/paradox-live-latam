@@ -178,40 +178,26 @@ export default function App() {
       .filter((p) => p.length > 0);
 
     const chapterData = {
+      id: `chap-${chapNumber}`,
       number: chapNumber,
       title: chapTitle || `Capítulo ${chapNumber}`,
       pages
     };
 
     try {
-      // Verificamos si ya existe el capítulo con ese número en la BD
-      const existing = chapters.find((c) => c.number === chapNumber);
-
-      let error;
-      if (existing) {
-        // Actualizar
-        const { error: updateError } = await supabase
-          .from('chapters')
-          .update({ title: chapterData.title, pages: chapterData.pages })
-          .eq('number', chapNumber);
-        error = updateError;
-      } else {
-        // Insertar nuevo
-        const { error: insertError } = await supabase
-          .from('chapters')
-          .insert([chapterData]);
-        error = insertError;
-      }
+      const { error } = await supabase
+        .from('chapters')
+        .upsert([chapterData], { onConflict: 'id' });
 
       if (error) throw error;
 
       showNotification(`¡Capítulo ${chapNumber} guardado en la nube para todos!`);
       setChapPagesText('');
       setChapTitle('');
-      fetchChaptersFromSupabase(); // Recargamos la lista actualizada
+      fetchChaptersFromSupabase();
     } catch (err: any) {
       console.error('Error al guardar en Supabase:', err);
-      showNotification('Error al guardar el capítulo en la base de datos.');
+      showNotification(`Error al guardar: ${err.message || 'Revisa la consola'}`);
     }
   };
 
