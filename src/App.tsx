@@ -124,7 +124,6 @@ export default function App() {
   const [chapPagesText, setChapPagesText] = useState<string>('');
   const [chapCredits, setChapCredits] = useState<string>('Traducido y editado por Paradox Live Latam');
 
-  // Estado para editar un capítulo existente sin reescribir páginas
   const [editingChapterNum, setEditingChapterNum] = useState<number | null>(null);
   const [editTitle, setEditTitle] = useState<string>('');
   const [editCredits, setEditCredits] = useState<string>('');
@@ -465,9 +464,13 @@ export default function App() {
                     {selectedChapter.number > 1 && (
                       <button
                         onClick={() => {
-                          const prev = chapters.find((c) => c.number === selectedChapter.number - 1);
-                          if (prev) setSelectedChapter(prev);
-                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                          const currentNum = selectedChapter.number;
+                          setSelectedChapter(null);
+                          window.scrollTo({ top: 0, behavior: 'instant' });
+                          setTimeout(() => {
+                            const prev = chapters.find((c) => c.number === currentNum - 1);
+                            if (prev) setSelectedChapter(prev);
+                          }, 50);
                         }}
                         className="flex-1 sm:flex-none flex items-center justify-center gap-1 px-4 py-2 rounded-lg bg-pink-600 hover:bg-pink-500 text-white font-semibold text-sm transition"
                       >
@@ -483,9 +486,13 @@ export default function App() {
                           setReadChapters(updated);
                           localStorage.setItem('pl_latam_read_chapters', JSON.stringify(updated));
                           
-                          const next = chapters.find((c) => c.number === selectedChapter.number + 1);
-                          if (next) setSelectedChapter(next);
-                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                          setSelectedChapter(null);
+                          window.scrollTo({ top: 0, behavior: 'instant' });
+
+                          setTimeout(() => {
+                            const next = chapters.find((c) => c.number === currentNum + 1);
+                            if (next) setSelectedChapter(next);
+                          }, 50);
                         }}
                         className="flex-1 sm:flex-none flex items-center justify-center gap-1 px-4 py-2 rounded-lg bg-pink-600 hover:bg-pink-500 text-white font-semibold text-sm transition"
                       >
@@ -509,8 +516,11 @@ export default function App() {
                         <button
                           key={chap.id}
                           onClick={() => {
-                            setSelectedChapter(chap);
-                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                            setSelectedChapter(null);
+                            window.scrollTo({ top: 0, behavior: 'instant' });
+                            setTimeout(() => {
+                              setSelectedChapter(chap);
+                            }, 50);
                           }}
                           className={`p-2.5 rounded-lg text-xs font-bold transition flex items-center justify-between ${isCurrent ? 'bg-pink-600 text-white' : isRead ? 'bg-emerald-950/60 border border-emerald-800/60 text-emerald-300' : 'bg-slate-900 border border-slate-800 text-slate-300 hover:border-pink-500'}`}
                         >
@@ -771,7 +781,6 @@ export default function App() {
 
                 <h3 className="text-sm font-bold text-slate-300 mb-3">Gestión y Edición de Capítulos</h3>
                 
-                {/* Modal / Formulario flotante de edición rápida */}
                 {editingChapterNum !== null && (
                   <div className="mb-4 p-3 bg-slate-950 border border-pink-500/50 rounded-lg">
                     <div className="flex justify-between items-center mb-2">
