@@ -15,7 +15,9 @@ import {
   Radio,
   User,
   Users,
-  CheckCircle2
+  CheckCircle2,
+  Edit3,
+  X
 } from 'lucide-react';
 
 // ==========================================
@@ -120,7 +122,12 @@ export default function App() {
   const [chapNumber, setChapNumber] = useState<number>(1);
   const [chapTitle, setChapTitle] = useState<string>('');
   const [chapPagesText, setChapPagesText] = useState<string>('');
-  const [chapCredits, setChapCredits] = useState<string>('Traducción y edición: Paradox Live Latam');
+  const [chapCredits, setChapCredits] = useState<string>('Traducido y editado por Paradox Live Latam');
+
+  // Estado para editar un capítulo existente sin reescribir páginas
+  const [editingChapterNum, setEditingChapterNum] = useState<number | null>(null);
+  const [editTitle, setEditTitle] = useState<string>('');
+  const [editCredits, setEditCredits] = useState<string>('');
   
   const [selectedCharId, setSelectedCharId] = useState<string>(INITIAL_CHARACTERS[0].id);
   const [charImageUrl, setCharImageUrl] = useState<string>('');
@@ -134,7 +141,6 @@ export default function App() {
     if (savedStatus) setMangaStatus(savedStatus);
     setCharacters(INITIAL_CHARACTERS);
 
-    // Cargar capítulos marcados como leídos
     const savedRead = localStorage.getItem('pl_latam_read_chapters');
     if (savedRead) {
       try {
@@ -245,6 +251,36 @@ export default function App() {
     showNotification(`¡Capítulo ${chapNumber} guardado y publicado!`);
     setChapPagesText('');
     setChapTitle('');
+    loadChaptersSafely();
+  };
+
+  const handleUpdateChapterInfo = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (editingChapterNum === null) return;
+
+    const chapToUpdate = chapters.find(c => c.number === editingChapterNum);
+    if (!chapToUpdate) return;
+
+    const updatedChap: Chapter = {
+      ...chapToUpdate,
+      title: editTitle.trim() || `Capítulo ${editingChapterNum}`,
+      credits: editCredits.trim() || 'Traducido y editado por Paradox Live Latam'
+    };
+
+    try {
+      await supabase
+        .from('chapters')
+        .update({ title: updatedChap.title, credits: updatedChap.credits })
+        .eq('number', editingChapterNum);
+    } catch (err) {
+      console.error("Error al actualizar créditos en Supabase:", err);
+    }
+
+    const updatedList = chapters.map(c => c.number === editingChapterNum ? updatedChap : c);
+    setChapters(updatedList);
+    localStorage.setItem('pl_latam_chapters', JSON.stringify(updatedList));
+    showNotification(`¡Créditos del capítulo ${editingChapterNum} actualizados!`);
+    setEditingChapterNum(null);
     loadChaptersSafely();
   };
 
@@ -382,13 +418,11 @@ export default function App() {
               </div>
             ) : (
               <div>
-                {/* Título arriba limpio */}
                 <div className="text-center mb-6">
                   <span className="text-xs uppercase tracking-widest text-pink-500 font-bold">Paralove School</span>
                   <h2 className="text-2xl font-bold text-white">Capítulo {selectedChapter.number} {selectedChapter.title ? `- ${selectedChapter.title}` : ''}</h2>
                 </div>
 
-                {/* Páginas del manga */}
                 <div className="flex flex-col items-center gap-2 max-w-2xl mx-auto mb-8">
                   {selectedChapter.pages && selectedChapter.pages.length > 0 ? (
                     selectedChapter.pages.map((imgUrl, idx) => (
@@ -407,13 +441,11 @@ export default function App() {
                   )}
                 </div>
 
-                {/* Créditos de traducción al finalizar el capítulo */}
                 <div className="max-w-2xl mx-auto mb-8 p-4 rounded-xl bg-slate-900 border border-slate-800 text-center">
                   <p className="text-xs text-slate-400 font-medium uppercase tracking-wider mb-1">Créditos de este capítulo</p>
                   <p className="text-sm font-bold text-pink-400">{selectedChapter.credits || 'Traducido y editado por Paradox Live Latam'}</p>
                 </div>
 
-                {/* Navegación y Botones ABAJO (Más cómodo) */}
                 <div className="max-w-2xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 bg-slate-900 p-4 rounded-xl border border-slate-800 mb-10">
                   <button
                     onClick={() => {
@@ -464,7 +496,6 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Lista Completa de Capítulos al Final */}
                 <div className="max-w-2xl mx-auto border-t border-slate-800 pt-6">
                   <h3 className="text-md font-bold mb-3 text-slate-300 flex items-center gap-2">
                     <BookOpen size={16} className="text-pink-500" />
@@ -679,6 +710,7 @@ export default function App() {
                 </div>
 
                 <form onSubmit={handleSaveChapter} className="space-y-4">
+                  <h3 className="text-sm font-bold text-white mb-2">Publicar / Subir Capítulo Nuevo</h3>
                   <div>
                     <label className="block text-xs font-bold text-slate-400 mb-1">Número de Capítulo</label>
                     <input
@@ -718,7 +750,7 @@ export default function App() {
                       Enlaces Directos de Imgur (Uno por línea)
                     </label>
                     <textarea
-                      rows={5}
+                      rows={4}
                       value={chapPagesText}
                       onChange={(e) => setChapPagesText(e.target.value)}
                       placeholder="Ejemplo:&#10;https://i.imgur.com/foto1.jpg&#10;https://i.imgur.com/foto2.jpg"
@@ -737,18 +769,73 @@ export default function App() {
 
                 <hr className="my-6 border-slate-800" />
 
-                <h3 className="text-sm font-bold text-slate-300 mb-3">Gestión de Capítulos</h3>
+                <h3 className="text-sm font-bold text-slate-300 mb-3">Gestión y Edición de Capítulos</h3>
+                
+                {/* Modal / Formulario flotante de edición rápida */}
+                {editingChapterNum !== null && (
+                  <div className="mb-4 p-3 bg-slate-950 border border-pink-500/50 rounded-lg">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-xs font-bold text-pink-400">Editando Capítulo {editingChapterNum}</span>
+                      <button onClick={() => setEditingChapterNum(null)} className="text-slate-400 hover:text-white">
+                        <X size={16} />
+                      </button>
+                    </div>
+                    <form onSubmit={handleUpdateChapterInfo} className="space-y-2">
+                      <div>
+                        <label className="block text-[10px] text-slate-400 mb-0.5">Título</label>
+                        <input
+                          type="text"
+                          value={editTitle}
+                          onChange={(e) => setEditTitle(e.target.value)}
+                          className="w-full bg-slate-900 border border-slate-800 rounded p-1.5 text-xs text-white"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] text-slate-400 mb-0.5">Créditos</label>
+                        <input
+                          type="text"
+                          value={editCredits}
+                          onChange={(e) => setEditCredits(e.target.value)}
+                          className="w-full bg-slate-900 border border-slate-800 rounded p-1.5 text-xs text-white"
+                        />
+                      </div>
+                      <button
+                        type="submit"
+                        className="w-full bg-pink-600 hover:bg-pink-500 text-white font-bold py-1.5 rounded text-xs transition"
+                      >
+                        Guardar Cambios de Créditos
+                      </button>
+                    </form>
+                  </div>
+                )}
+
                 <div className="space-y-2 max-h-48 overflow-y-auto">
                   {chapters.map((c) => (
                     <div key={c.id} className="flex items-center justify-between p-2 rounded bg-slate-950 border border-slate-800 text-xs">
-                      <span>Capítulo {c.number} - ({c.pages.length} páginas)</span>
-                      <button
-                        onClick={() => handleDeleteChapter(c.number)}
-                        className="text-red-400 hover:text-red-300 p-1"
-                        title="Eliminar capítulo"
-                      >
-                        <Trash2 size={16} />
-                      </button>
+                      <div>
+                        <span className="font-bold text-white">Cap. {c.number}</span>
+                        <p className="text-[10px] text-slate-400 truncate max-w-[180px]">Créditos: {c.credits || 'N/A'}</p>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <button
+                          onClick={() => {
+                            setEditingChapterNum(c.number);
+                            setEditTitle(c.title || '');
+                            setEditCredits(c.credits || '');
+                          }}
+                          className="text-pink-400 hover:text-pink-300 p-1.5 bg-slate-900 rounded border border-slate-800"
+                          title="Editar créditos o título"
+                        >
+                          <Edit3 size={14} />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteChapter(c.number)}
+                          className="text-red-400 hover:text-red-300 p-1.5 bg-slate-900 rounded border border-slate-800"
+                          title="Eliminar capítulo"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>
