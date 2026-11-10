@@ -198,3 +198,27 @@
     ]
   }
 ]
+},
+  {
+    "id": "cap-19",
+    "chapterNumber": 19,
+    "title": "Capítulo 19",
+    "coverUrl": "https://i.imgur.com/LwAKthp.jpeg",
+    "pages": [
+      "https://i.imgur.com/PSjXpw3.jpeg",
+      "https://i.imgur.com/bC8bcp2.jpeg",
+      "https://i.imgur.com/E5nNxTa.jpeg"
+    ]
+  },
+},
+  {
+    "id": "cap-20",
+    "chapterNumber": 20,
+    "title": "Capítulo 20",
+    "coverUrl": "https://i.imgur.com/LwAKthp.jpeg",
+    "pages": [
+      "https://i.imgur.com/C1VVMln.jpeg",
+      "https://i.imgur.com/FDeKcvD.jpeg",
+      "https://i.imgur.com/eckhGk0.jpeg"
+    ]
+  },
